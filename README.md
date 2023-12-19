@@ -208,4 +208,4 @@ flowchart LR
 
 TODO
 
-[Full documentation on GitHub Pages]: https://utia-gc.github.io/ngs/
+[Full documentation on GitHub Pages]: https://utia-gc.github.io/rnaseq/
