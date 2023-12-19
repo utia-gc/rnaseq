@@ -11,9 +11,6 @@
 `utia-gc/rnaseq` is a [Nextflow](https://www.nextflow.io/) pipeline built on [utia-gc/ngs](htpps://github.com/utia-gc/ngs) for base NGS analysis.
 While `utia-gc/rnaseq` can be run on any platform supported by Nextflow, it is developed for use in HPC environments and specifically [ISAAC Next Generation] at the University of Tennessee, Knoxville.
 
-> [!WARNING]
-> It is usually not a good idea to directly run `utia-gc/rnaseq`. This pipeline is designed to be a starting point for pipelines dedicated to specific analyses. It is generally not meant to be run itself. It will not often have scheduled or tagged releases, and as such it cannot reliably be used reproducibly. In nearly all cases, users should check the forked repos to find a pipeline built from `utia-gc/rnaseq` that is more suited to their needs or fork the repo to create their own versioned releases of a pipeline built on `utia-gc/rnaseq`.
-
 ### Pipeline overview
 
 ```mermaid
