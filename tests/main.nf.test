@@ -71,7 +71,7 @@ nextflow_pipeline {
         then {
             // test workflow status
             assert workflow.success
-            assert workflow.trace.succeeded().size() == 45
+            assert workflow.trace.succeeded().size() == 47
 
             // test raw FastQC html reports and zip files published to reports dir
             assert path("${params.publishDirReports}/fastqc/${readsSELane1.getStemName()}_raw_R1_fastqc.html").exists()
@@ -121,6 +121,9 @@ nextflow_pipeline {
             assert path("${params.publishDirData}/alignments/${readsSELane1.getSampleName()}.bam.bai").exists()
             assert path("${params.publishDirData}/alignments/${readsPELane1.getSampleName()}.bam").exists()
             assert path("${params.publishDirData}/alignments/${readsPELane1.getSampleName()}.bam.bai").exists()
+            // test qualimap rnaseq QC directory is written to reports dir
+            assert path("${params.publishDirReports}/rnaseq/${readsSELane1.getSampleName()}_rnaseq_qc").exists()
+            assert path("${params.publishDirReports}/rnaseq/${readsPELane1.getSampleName()}_rnaseq_qc").exists()
             // test MultiQC reports and data published to reports dir
             assert path("${params.publishDirReports}/multiqc/reads/reads.html").exists()
             assert path("${params.publishDirReports}/multiqc/reads/reads_data/").exists()
@@ -152,7 +155,7 @@ nextflow_pipeline {
         then {
             // test workflow status
             assert workflow.success
-            assert workflow.trace.succeeded().size() == 43
+            assert workflow.trace.succeeded().size() == 45
 
             // test raw FastQC html reports and zip files published to reports dir
             assert path("${params.publishDirReports}/fastqc/${readsSELane1.getStemName()}_raw_R1_fastqc.html").exists()
@@ -202,6 +205,9 @@ nextflow_pipeline {
             assert path("${params.publishDirData}/alignments/${readsSELane1.getSampleName()}.bam.bai").exists()
             assert path("${params.publishDirData}/alignments/${readsPELane1.getSampleName()}.bam").exists()
             assert path("${params.publishDirData}/alignments/${readsPELane1.getSampleName()}.bam.bai").exists()
+            // test qualimap rnaseq QC directory is written to reports dir
+            assert path("${params.publishDirReports}/rnaseq/${readsSELane1.getSampleName()}_rnaseq_qc").exists()
+            assert path("${params.publishDirReports}/rnaseq/${readsPELane1.getSampleName()}_rnaseq_qc").exists()
             // test MultiQC reports and data published to reports dir
             assert path("${params.publishDirReports}/multiqc/reads/reads.html").exists()
             assert path("${params.publishDirReports}/multiqc/reads/reads_data/").exists()
@@ -233,7 +239,7 @@ nextflow_pipeline {
         then {
             // test workflow status
             assert workflow.success
-            assert workflow.trace.succeeded().size() == 45
+            assert workflow.trace.succeeded().size() == 47
 
             // test raw FastQC html reports and zip files published to reports dir
             assert path("${params.publishDirReports}/fastqc/${readsSELane1.getStemName()}_raw_R1_fastqc.html").exists()
@@ -283,6 +289,9 @@ nextflow_pipeline {
             assert path("${params.publishDirData}/alignments/${readsSELane1.getSampleName()}.bam.bai").exists()
             assert path("${params.publishDirData}/alignments/${readsPELane1.getSampleName()}.bam").exists()
             assert path("${params.publishDirData}/alignments/${readsPELane1.getSampleName()}.bam.bai").exists()
+            // test qualimap rnaseq QC directory is written to reports dir
+            assert path("${params.publishDirReports}/rnaseq/${readsSELane1.getSampleName()}_rnaseq_qc").exists()
+            assert path("${params.publishDirReports}/rnaseq/${readsPELane1.getSampleName()}_rnaseq_qc").exists()
             // test MultiQC reports and data published to reports dir
             assert path("${params.publishDirReports}/multiqc/reads/reads.html").exists()
             assert path("${params.publishDirReports}/multiqc/reads/reads_data/").exists()
@@ -314,7 +323,7 @@ nextflow_pipeline {
         then {
             // test workflow status
             assert workflow.success
-            assert workflow.trace.succeeded().size() == 45
+            assert workflow.trace.succeeded().size() == 47
 
             // test raw FastQC html reports and zip files published to reports dir
             assert path("${params.publishDirReports}/fastqc/${readsSELane1.getStemName()}_raw_R1_fastqc.html").exists()
@@ -364,6 +373,9 @@ nextflow_pipeline {
             assert path("${params.publishDirData}/alignments/${readsSELane1.getSampleName()}.bam.bai").exists()
             assert path("${params.publishDirData}/alignments/${readsPELane1.getSampleName()}.bam").exists()
             assert path("${params.publishDirData}/alignments/${readsPELane1.getSampleName()}.bam.bai").exists()
+            // test qualimap rnaseq QC directory is written to reports dir
+            assert path("${params.publishDirReports}/rnaseq/${readsSELane1.getSampleName()}_rnaseq_qc").exists()
+            assert path("${params.publishDirReports}/rnaseq/${readsPELane1.getSampleName()}_rnaseq_qc").exists()
             // test MultiQC reports and data published to reports dir
             assert path("${params.publishDirReports}/multiqc/reads/reads.html").exists()
             assert path("${params.publishDirReports}/multiqc/reads/reads_data/").exists()
