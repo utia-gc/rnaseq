@@ -56,6 +56,7 @@ workflow {
         ch_trim_log,
         ch_genome_index,
         ch_alignmentsIndividual,
-        ch_alignmentsMerged
+        ch_alignmentsMerged,
+        ch_annotations
     )
 }

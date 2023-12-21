@@ -1,6 +1,8 @@
 include { QC_Alignments           } from '../subworkflows/qc_alignments.nf'
 include { QC_Reads                } from '../subworkflows/qc_reads.nf'
+include { QC_Rnaseq               } from '../subworkflows/qc_rnaseq.nf'
 include { multiqc as multiqc_full } from "../modules/multiqc.nf"
+
 
 workflow CHECK_QUALITY {
     take:
@@ -10,6 +12,7 @@ workflow CHECK_QUALITY {
         genome_index
         alignmentsIndividual
         alignmentsMerged
+        annotations
 
     main:
         QC_Reads(
@@ -25,6 +28,11 @@ workflow CHECK_QUALITY {
             alignmentsMerged
         )
         ch_multiqc_alignments = QC_Alignments.out.multiqc
+
+        QC_Rnaseq(
+            alignmentsMerged,
+            annotations
+        )
 
         ch_multiqc_full = Channel.empty()
             .concat(ch_multiqc_reads)
