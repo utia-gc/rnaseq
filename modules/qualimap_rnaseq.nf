@@ -13,7 +13,7 @@ process qualimap_rnaseq {
 
     input:
         tuple val(metadata), path(bam), path(bai)
-        path gtf
+        path annotations
 
     output:
         path '*', emit: qualimapRnaseq
@@ -28,7 +28,7 @@ process qualimap_rnaseq {
 
         qualimap rnaseq \\
             -bam ${bam} \\
-            -gtf ${gtf} \\
+            -gtf ${annotations} \\
             -outdir . \\
             -outformat HTML \\
             --java-mem-size=${memSize}G \\
