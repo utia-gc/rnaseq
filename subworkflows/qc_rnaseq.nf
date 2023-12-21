@@ -1,3 +1,4 @@
+include { multiqc as multiqc_rnaseq } from "../modules/multiqc.nf"
 include { qualimap_rnaseq } from "../modules/qualimap_rnaseq.nf"               
 
 
@@ -16,5 +17,15 @@ workflow QC_Rnaseq {
         qualimap_rnaseq(
             alignments,
             annotations
+        )
+
+        ch_multiqc_rnaseq = Channel.empty()
+            .concat(qualimap_rnaseq.out.qualimapRnaseq)
+            .collect( sort: true )
+
+        multiqc_rnaseq(
+            ch_multiqc_rnaseq,
+            file("${projectDir}/assets/multiqc_config.yaml"),
+            'rnaseq'
         )
 }
