@@ -19,8 +19,7 @@ process qualimap_rnaseq {
         path '*', emit: qualimapRnaseq
 
     script:
-        String stemName = MetadataUtils.buildStemName(metadata)
-
+        // compute a memory size (in GB) that gives some overhead
         def memSize = "${(task.memory - 1.GB) as String}".replaceAll(/ GB/, "")
         String args = new Args(task.ext).buildArgsString()
 
