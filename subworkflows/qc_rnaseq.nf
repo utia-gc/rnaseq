@@ -7,6 +7,8 @@ include { qualimap_rnaseq } from "../modules/qualimap_rnaseq.nf"
  *
  * @take alignments the sorted and indexed aligned/mapped reads channel of format [metadata, BAM, BAM.BAI].
  * @take annotations the uncompressed reference annotations in GTF format.
+ *
+ * @emit multiqc channel of the files that go into the RNA-seq specific MultiQC
  */
 workflow QC_Rnaseq {
     take:
@@ -28,4 +30,7 @@ workflow QC_Rnaseq {
             file("${projectDir}/assets/multiqc_config.yaml"),
             'rnaseq'
         )
+
+    emit:
+        multiqc = ch_multiqc_rnaseq
 }

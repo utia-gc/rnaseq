@@ -33,10 +33,12 @@ workflow CHECK_QUALITY {
             alignmentsMerged,
             annotations
         )
+        ch_multiqc_rnaseq = QC_Rnaseq.out.multiqc
 
         ch_multiqc_full = Channel.empty()
             .concat(ch_multiqc_reads)
             .concat(ch_multiqc_alignments)
+            .concat(ch_multiqc_rnaseq)
             .collect( sort: true )
         multiqc_full(
             ch_multiqc_full,
