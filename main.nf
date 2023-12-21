@@ -17,6 +17,7 @@ include { CHECK_QUALITY  } from "./workflows/check_quality.nf"
 include { MAP_READS      } from "./workflows/map_reads.nf"
 include { PREPARE_INPUTS } from "./workflows/prepare_inputs.nf"
 include { PROCESS_READS  } from "./workflows/process_reads.nf"
+include { QUANTIFY       } from './workflows/quantify.nf'
 
 /*
 ---------------------------------------------------------------------
@@ -49,6 +50,11 @@ workflow {
     )
     ch_alignmentsIndividual = MAP_READS.out.alignmentsIndividual
     ch_alignmentsMerged     = MAP_READS.out.alignmentsMerged
+
+    QUANTIFY(
+        ch_alignmentsMerged,
+        ch_annotations
+    )
 
     CHECK_QUALITY(
         ch_reads_raw,
