@@ -71,7 +71,7 @@ nextflow_pipeline {
         then {
             // test workflow status
             assert workflow.success
-            assert workflow.trace.succeeded().size() == 47
+            assert workflow.trace.succeeded().size() == 48
 
             // test raw FastQC html reports and zip files published to reports dir
             assert path("${params.publishDirReports}/fastqc/${readsSELane1.getStemName()}_raw_R1_fastqc.html").exists()
@@ -129,6 +129,8 @@ nextflow_pipeline {
             assert path("${params.publishDirReports}/multiqc/reads/reads_data/").exists()
             assert path("${params.publishDirReports}/multiqc/alignments/alignments.html").exists()
             assert path("${params.publishDirReports}/multiqc/alignments/alignments_data/").exists()
+            assert path("${params.publishDirReports}/multiqc/rnaseq/rnaseq.html").exists()
+            assert path("${params.publishDirReports}/multiqc/rnaseq/rnaseq_data/").exists()
             assert path("${params.publishDirReports}/multiqc/ngs/ngs.html").exists()
             assert path("${params.publishDirReports}/multiqc/ngs/ngs_data/").exists()
         }
@@ -155,7 +157,7 @@ nextflow_pipeline {
         then {
             // test workflow status
             assert workflow.success
-            assert workflow.trace.succeeded().size() == 45
+            assert workflow.trace.succeeded().size() == 46
 
             // test raw FastQC html reports and zip files published to reports dir
             assert path("${params.publishDirReports}/fastqc/${readsSELane1.getStemName()}_raw_R1_fastqc.html").exists()
@@ -213,6 +215,8 @@ nextflow_pipeline {
             assert path("${params.publishDirReports}/multiqc/reads/reads_data/").exists()
             assert path("${params.publishDirReports}/multiqc/alignments/alignments.html").exists()
             assert path("${params.publishDirReports}/multiqc/alignments/alignments_data/").exists()
+            assert path("${params.publishDirReports}/multiqc/rnaseq/rnaseq.html").exists()
+            assert path("${params.publishDirReports}/multiqc/rnaseq/rnaseq_data/").exists()
             assert path("${params.publishDirReports}/multiqc/ngs/ngs.html").exists()
             assert path("${params.publishDirReports}/multiqc/ngs/ngs_data/").exists()
         }
@@ -239,7 +243,7 @@ nextflow_pipeline {
         then {
             // test workflow status
             assert workflow.success
-            assert workflow.trace.succeeded().size() == 47
+            assert workflow.trace.succeeded().size() == 48
 
             // test raw FastQC html reports and zip files published to reports dir
             assert path("${params.publishDirReports}/fastqc/${readsSELane1.getStemName()}_raw_R1_fastqc.html").exists()
@@ -297,6 +301,8 @@ nextflow_pipeline {
             assert path("${params.publishDirReports}/multiqc/reads/reads_data/").exists()
             assert path("${params.publishDirReports}/multiqc/alignments/alignments.html").exists()
             assert path("${params.publishDirReports}/multiqc/alignments/alignments_data/").exists()
+            assert path("${params.publishDirReports}/multiqc/rnaseq/rnaseq.html").exists()
+            assert path("${params.publishDirReports}/multiqc/rnaseq/rnaseq_data/").exists()
             assert path("${params.publishDirReports}/multiqc/ngs/ngs.html").exists()
             assert path("${params.publishDirReports}/multiqc/ngs/ngs_data/").exists()
         }
@@ -323,7 +329,7 @@ nextflow_pipeline {
         then {
             // test workflow status
             assert workflow.success
-            assert workflow.trace.succeeded().size() == 47
+            assert workflow.trace.succeeded().size() == 48
 
             // test raw FastQC html reports and zip files published to reports dir
             assert path("${params.publishDirReports}/fastqc/${readsSELane1.getStemName()}_raw_R1_fastqc.html").exists()
@@ -381,6 +387,8 @@ nextflow_pipeline {
             assert path("${params.publishDirReports}/multiqc/reads/reads_data/").exists()
             assert path("${params.publishDirReports}/multiqc/alignments/alignments.html").exists()
             assert path("${params.publishDirReports}/multiqc/alignments/alignments_data/").exists()
+            assert path("${params.publishDirReports}/multiqc/rnaseq/rnaseq.html").exists()
+            assert path("${params.publishDirReports}/multiqc/rnaseq/rnaseq_data/").exists()
             assert path("${params.publishDirReports}/multiqc/ngs/ngs.html").exists()
             assert path("${params.publishDirReports}/multiqc/ngs/ngs_data/").exists()
         }
