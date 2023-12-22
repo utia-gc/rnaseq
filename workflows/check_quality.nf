@@ -13,6 +13,7 @@ workflow CHECK_QUALITY {
         alignmentsIndividual
         alignmentsMerged
         annotations
+        quantify_log
 
     main:
         QC_Reads(
@@ -31,7 +32,8 @@ workflow CHECK_QUALITY {
 
         QC_Rnaseq(
             alignmentsMerged,
-            annotations
+            annotations,
+            quantify_log
         )
         ch_multiqc_rnaseq = QC_Rnaseq.out.multiqc
 

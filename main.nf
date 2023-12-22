@@ -55,6 +55,7 @@ workflow {
         ch_alignmentsMerged,
         ch_annotations
     )
+    ch_quantify_log = QUANTIFY.out.quantify_log
 
     CHECK_QUALITY(
         ch_reads_raw,
@@ -63,6 +64,7 @@ workflow {
         ch_genome_index,
         ch_alignmentsIndividual,
         ch_alignmentsMerged,
-        ch_annotations
+        ch_annotations,
+        ch_quantify_log
     )
 }

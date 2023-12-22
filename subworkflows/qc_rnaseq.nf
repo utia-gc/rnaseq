@@ -14,6 +14,7 @@ workflow QC_Rnaseq {
     take:
         alignments
         annotations
+        quantify_log
 
     main:
         qualimap_rnaseq(
@@ -23,6 +24,7 @@ workflow QC_Rnaseq {
 
         ch_multiqc_rnaseq = Channel.empty()
             .concat(qualimap_rnaseq.out.qualimapRnaseq)
+            .concat(quantify_log)
             .collect( sort: true )
 
         multiqc_rnaseq(

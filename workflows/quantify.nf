@@ -9,6 +9,8 @@ include { featureCounts } from '../modules/featureCounts.nf'
  * 
  * @take alignments the sorted and indexed aligned/mapped reads channel of format [metadata, BAM, BAM.BAI].
  * @take annotations the reference annotations in GTF format. Can be gzipped.
+ *
+ * @emit quantify_log the output logs/summary/QC files from the quantification tool.
  */
 workflow QUANTIFY {
     take:
@@ -20,4 +22,7 @@ workflow QUANTIFY {
             alignments,
             annotations
         )
+
+    emit:
+        quantify_log = featureCounts.out.countsSummary
 }
