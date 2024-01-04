@@ -14,8 +14,9 @@ process featureCounts {
 
     label 'subread'
 
-    label 'med_cpu'
+    label 'huge_cpu'
     label 'med_mem'
+    label 'huge_time'
 
     // publish counts file to data dir
     publishDir(

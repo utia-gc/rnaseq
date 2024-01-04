@@ -14,7 +14,9 @@ process qualimap_rnaseq {
 
     label 'qualimap'
 
-    label 'big_mem'
+    label 'med_cpu'
+    label 'med_mem'
+    label 'def_time'
 
     publishDir(
         path:    "${params.publishDirReports}/rnaseq/qualimap",
