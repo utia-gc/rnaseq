@@ -1,4 +1,5 @@
-include { featureCounts } from '../modules/featureCounts.nf'
+include { featureCounts      } from '../modules/featureCounts.nf'
+include { samtools_sort_name } from '../modules/samtools_sort_name.nf'
 
 
 /**
@@ -18,8 +19,9 @@ workflow QUANTIFY {
         annotations
 
     main:
+        samtools_sort_name(alignments)
         featureCounts(
-            alignments,
+            samtools_sort_name.out.bamNameSorted,
             annotations
         )
 

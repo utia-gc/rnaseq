@@ -3,7 +3,7 @@
  * 
  * Count reads within annotations with featureCounts
  *
- * @input alignments the sorted and indexed aligned/mapped reads channel of format [metadata, BAM, BAM.BAI].
+ * @input alignments the name sorted aligned/mapped reads channel of format [metadata, BAM].
  * @input annotations the reference annotations in GTF format. Can be gzipped.
  *
  * @emit counts the output counts file channel of format [metadata, counts.txt].
@@ -32,7 +32,7 @@ process featureCounts {
     )
 
     input:
-        tuple val(metadata), path(bam), path(bai)
+        tuple val(metadata), path(bam)
         path annotations
 
     output:
