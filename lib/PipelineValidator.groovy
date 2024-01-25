@@ -13,6 +13,8 @@ static void validateRequiredParams(params, log) {
     validateSamplesheet(params, log)
     validateGenome(params, log)
     validateAnnotations(params, log)
+    validateTrimTool(params, log)
+    validateMapTool(params, log)
 }
 
 
@@ -91,6 +93,58 @@ static void validateAnnotations(params, log) {
         log.info "Using reference annotations '${params.annotations}'"
     } else {
         log.error "Parameter 'annotations' is required but was not provided."
+        System.exit(64)
+    }
+}
+
+
+/**
+ * Validate trim tool.
+ *
+ * Check that trim tool param exists and is a valid trim tool.
+ * Throw exit status 64 if otherwise.
+ *
+ * @param params The params for the Nextflow pipeline.
+ * @param log The Nextflow log object.
+ *
+ * @return null
+ */
+static void validateTrimTool(params, log) {
+    if (params.tools.trim) {
+        if (Tools.Trim.isTrimTool(params.tools.trim)) {
+            log.info "Using trim tool '${params.tools.trim}'"
+        } else {
+            log.error "'${params.tools.trim}' is not a valid trim tool."
+            System.exit(64)
+        }
+    } else {
+        log.error "Parameter 'tools.trim' is required but was not provided."
+        System.exit(64)
+    }
+}
+
+
+/**
+ * Validate map tool.
+ *
+ * Check that map tool param exists and is a valid map tool.
+ * Throw exit status 64 if otherwise.
+ *
+ * @param params The params for the Nextflow pipeline.
+ * @param log The Nextflow log object.
+ *
+ * @return null
+ */
+static void validateMapTool(params, log) {
+    if (params.tools.map) {
+        if (Tools.Map.isMapTool(params.tools.map)) {
+            log.info "Using map tool '${params.tools.map}'"
+        } else {
+            log.error "'${params.tools.map}' is not a valid map tool."
+            System.exit(64)
+        }
+    } else {
+        log.error "Parameter 'tools.map' is required but was not provided."
         System.exit(64)
     }
 }
