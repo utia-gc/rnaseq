@@ -25,6 +25,6 @@ nextflow pull utia-gc/rnaseq
 # run pipeline
 nextflow run utia-gc/rnaseq \
     -main-script setup.nf \
-    -revision v0.2.1 \
+    -revision v0.2.2 \
     -profile condo_trowan1 \
     -params-file src/nextflow/params_setup.yaml
