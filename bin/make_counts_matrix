@@ -49,7 +49,6 @@ def get_args() -> Args:
 # --------------------------------------------------
 def main() -> None:
     """ Main program """
-
     logging.basicConfig(level=logging.DEBUG)
 
     args = get_args()
@@ -59,12 +58,37 @@ def main() -> None:
     feature_counts = merge_featureCounts_counts(args.files)
     counts_matrix = extract_matrix_featureCounts(feature_counts)
     features_table = extract_features_featureCounts(feature_counts)
-    
-    counts_matrix.head().to_csv(sys.stdout, sep=",", index=False)
-    features_table.head().to_csv(sys.stdout, sep=",", index=False)
 
+    write_counts(
+        counts=counts_matrix,
+        features=features_table,
+        prefix=args.prefix
+    )
 
 # --------------------------------------------------
+def write_counts(counts: pd.DataFrame, features: pd.DataFrame, prefix) -> None:
+    """Write counts data
+
+    :param counts: Counts matrix.
+    :type counts: pd.DataFrame
+    :param features: Feature metadata.
+    :type features: pd.DataFrame
+    :param prefix: File prefix name or stdout.
+    :type prefix: _type_
+    """
+    if isinstance(prefix, str):
+        out_counts = f"{prefix}.csv"
+        counts.to_csv(out_counts, sep=",", index=False)
+        logging.debug("Wrote counts matrix to: %s", out_counts)
+
+        out_features = f"{prefix}_feature_metadata.csv"
+        features.to_csv(out_features, sep=",", index=False)
+        logging.debug("Wrote features metadata to: %s", out_features)
+    elif prefix == sys.stdout:
+        counts.to_csv(sys.stdout, sep=",", index=False)
+        logging.debug("Wrote counts matrix to: stdout")
+
+
 def extract_matrix_featureCounts(feature_counts: pd.DataFrame) -> pd.DataFrame:
     """Extract the counts matrix from featureCounts
 
