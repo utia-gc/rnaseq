@@ -12,7 +12,7 @@ import pandas as pd
 class Args(NamedTuple):
     """ Command-line arguments """
     files: List[str]
-    output: str
+    prefix: str
 
 
 # --------------------------------------------------
@@ -31,16 +31,19 @@ def get_args() -> Args:
         help='Paths to individual counts matrix files.'
     )
     parser.add_argument(
-        "-o",
-        "--output",
-        metavar="output_file",
+        "-p",
+        "--prefix",
+        metavar="output_prefix",
         type=str,
-        help='Output filename for counts matrix. Write to stdout if not specified.'
+        help="Output prefix for counts matrix and feature metadata CSV files. If not specified write only counts matrix to metadata."
     )
 
     args = parser.parse_args()
 
-    return Args(args.files, args.output)
+    if not args.prefix:
+        args.prefix = sys.stdout
+
+    return Args(args.files, args.prefix)
 
 
 # --------------------------------------------------
@@ -51,7 +54,7 @@ def main() -> None:
 
     args = get_args()
     logging.debug("Counts files: %s", args.files)
-    logging.debug("Output file: %s", args.output)
+    logging.debug("Output file prefix: %s", args.prefix)
 
     feature_counts = merge_featureCounts_counts(args.files)
     counts_matrix = extract_matrix_featureCounts(feature_counts)
