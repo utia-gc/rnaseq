@@ -3,6 +3,7 @@
 
 import argparse
 import logging
+import sys
 from typing import List, NamedTuple
 
 import pandas as pd
@@ -52,11 +53,38 @@ def main() -> None:
     logging.debug("Counts files: %s", args.files)
     logging.debug("Output file: %s", args.output)
 
-    for counts_file in args.files:
-        counts = read_featureCounts_counts(counts_file)
+    merged_counts = merge_featureCounts_counts(args.files)
+
+    merged_counts.head().to_csv(sys.stdout, sep=",", index=False)
 
 
 # --------------------------------------------------
+def merge_featureCounts_counts(paths: List[str]) -> pd.DataFrame:
+    """Make a merged DataFrame of featureCounts counts
+
+    :param paths: Paths to featureCounts counts files
+    :type paths: List[str]
+    :return: DataFrame of merged featureCounts counts
+    :rtype: pd.DataFrame
+    """
+    gene_info_labels = ["Geneid", "Chr", "Start", "End", "Strand", "Length"]
+
+    # read first counts file to initialize the merged counts DataFrame
+    merged_counts = read_featureCounts_counts(paths[0])
+    logging.debug("Counts file used to initialize merged counts: %s", paths[0])
+
+    # read through remaining counts files and merge them into the counts DataFrame
+    for counts_file in paths[1:]:
+        merged_counts = merged_counts.merge(
+            read_featureCounts_counts(counts_file),
+            how="outer",
+            on=gene_info_labels
+        )
+        logging.debug("Counts file merged into counts DataFrame: %s", counts_file)
+
+    return merged_counts
+
+
 def read_featureCounts_counts(path: str) -> pd.DataFrame:
     """Read a file of counts output by featureCounts into a DataFrame
 
