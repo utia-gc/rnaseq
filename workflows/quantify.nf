@@ -1,4 +1,5 @@
-include { featureCounts } from '../modules/featureCounts.nf'
+include { featureCounts      } from '../modules/featureCounts.nf'
+include { make_counts_matrix } from '../modules/make_counts_matrix.nf'
 
 
 /**
@@ -21,6 +22,20 @@ workflow QUANTIFY {
         featureCounts(
             alignmentsMergedSortedByName,
             annotations
+        )
+
+        // collect all of the counts files for input into make_counts_matrix
+        featureCounts.out.counts
+            .map { metadata, counts ->
+                counts
+            }
+            .collect( sort: true )
+            .set { ch_countsCollected }
+        ch_countsCollected.dump(tag: 'ch_countsCollected')
+
+        make_counts_matrix(
+            ch_countsCollected,
+            params.projectTitle
         )
 
     emit:
