@@ -192,7 +192,7 @@ nextflow_pipeline {
         then {
             // test workflow status
             assert workflow.success
-            assert workflow.trace.succeeded().size() == 53
+            assert workflow.trace.succeeded().size() == 54
 
             // test raw FastQC html reports and zip files published to reports dir
             assert path("${params.publishDirReports}/.fastqc/${readsSELane1.getStemName()}_raw_R1_fastqc.html").exists()
@@ -251,6 +251,9 @@ nextflow_pipeline {
             // test featureCounts summary files published to reports dir
             assert path("${params.publishDirReports}/counts/${readsSELane1.getSampleName()}.txt.summary").exists()
             assert path("${params.publishDirReports}/counts/${readsPELane1.getSampleName()}.txt.summary").exists()
+            // test merged counts files and feature metadata published to data dir
+            assert path("${params.publishDirData}/counts/rnaseq_nf-test_counts.csv").exists()
+            assert path("${params.publishDirData}/counts/rnaseq_nf-test_counts_feature_metadata.csv").exists()
             // test MultiQC reports and data published to reports dir
             assert path("${params.publishDirReports}/multiqc/reads/reads.html").exists()
             assert path("${params.publishDirReports}/multiqc/reads/reads_data/").exists()
@@ -283,7 +286,7 @@ nextflow_pipeline {
         then {
             // test workflow status
             assert workflow.success
-            assert workflow.trace.succeeded().size() == 51
+            assert workflow.trace.succeeded().size() == 52
 
             // test raw FastQC html reports and zip files published to reports dir
             assert path("${params.publishDirReports}/.fastqc/${readsSELane1.getStemName()}_raw_R1_fastqc.html").exists()
@@ -342,6 +345,9 @@ nextflow_pipeline {
             // test featureCounts summary files published to reports dir
             assert path("${params.publishDirReports}/counts/${readsSELane1.getSampleName()}.txt.summary").exists()
             assert path("${params.publishDirReports}/counts/${readsPELane1.getSampleName()}.txt.summary").exists()
+            // test merged counts files and feature metadata published to data dir
+            assert path("${params.publishDirData}/counts/rnaseq_nf-test_counts.csv").exists()
+            assert path("${params.publishDirData}/counts/rnaseq_nf-test_counts_feature_metadata.csv").exists()
             // test MultiQC reports and data published to reports dir
             assert path("${params.publishDirReports}/multiqc/reads/reads.html").exists()
             assert path("${params.publishDirReports}/multiqc/reads/reads_data/").exists()
@@ -376,7 +382,7 @@ nextflow_pipeline {
         then {
             // test workflow status
             assert workflow.success
-            assert workflow.trace.succeeded().size() == 53
+            assert workflow.trace.succeeded().size() == 54
 
             // test raw FastQC html reports and zip files published to reports dir
             assert path("${params.publishDirReports}/.fastqc/${readsSELane1.getStemName()}_raw_R1_fastqc.html").exists()
@@ -435,6 +441,9 @@ nextflow_pipeline {
             // test featureCounts summary files published to reports dir
             assert path("${params.publishDirReports}/counts/${readsSELane1.getSampleName()}.txt.summary").exists()
             assert path("${params.publishDirReports}/counts/${readsPELane1.getSampleName()}.txt.summary").exists()
+            // test merged counts files and feature metadata published to data dir
+            assert path("${params.publishDirData}/counts/rnaseq_nf-test_counts.csv").exists()
+            assert path("${params.publishDirData}/counts/rnaseq_nf-test_counts_feature_metadata.csv").exists()
             // test MultiQC reports and data published to reports dir
             assert path("${params.publishDirReports}/multiqc/reads/reads.html").exists()
             assert path("${params.publishDirReports}/multiqc/reads/reads_data/").exists()
@@ -468,7 +477,7 @@ nextflow_pipeline {
         then {
             // test workflow status
             assert workflow.success
-            assert workflow.trace.succeeded().size() == 53
+            assert workflow.trace.succeeded().size() == 54
 
             // test raw FastQC html reports and zip files published to reports dir
             assert path("${params.publishDirReports}/.fastqc/${readsSELane1.getStemName()}_raw_R1_fastqc.html").exists()
@@ -527,6 +536,9 @@ nextflow_pipeline {
             // test featureCounts summary files published to reports dir
             assert path("${params.publishDirReports}/counts/${readsSELane1.getSampleName()}.txt.summary").exists()
             assert path("${params.publishDirReports}/counts/${readsPELane1.getSampleName()}.txt.summary").exists()
+            // test merged counts files and feature metadata published to data dir
+            assert path("${params.publishDirData}/counts/rnaseq_nf-test_counts.csv").exists()
+            assert path("${params.publishDirData}/counts/rnaseq_nf-test_counts_feature_metadata.csv").exists()
             // test MultiQC reports and data published to reports dir
             assert path("${params.publishDirReports}/multiqc/reads/reads.html").exists()
             assert path("${params.publishDirReports}/multiqc/reads/reads_data/").exists()
