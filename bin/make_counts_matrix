@@ -53,25 +53,41 @@ def main() -> None:
     logging.debug("Counts files: %s", args.files)
     logging.debug("Output file: %s", args.output)
 
-    featureCounts = merge_featureCounts_counts(args.files)
-    counts_matrix = extract_matrix_featureCounts(featureCounts)
+    feature_counts = merge_featureCounts_counts(args.files)
+    counts_matrix = extract_matrix_featureCounts(feature_counts)
+    features_table = extract_features_featureCounts(feature_counts)
     
     counts_matrix.head().to_csv(sys.stdout, sep=",", index=False)
+    features_table.head().to_csv(sys.stdout, sep=",", index=False)
 
 
 # --------------------------------------------------
-def extract_matrix_featureCounts(featureCounts: pd.DataFrame) -> pd.DataFrame:
+def extract_matrix_featureCounts(feature_counts: pd.DataFrame) -> pd.DataFrame:
     """Extract the counts matrix from featureCounts
 
-    :param featureCounts: A merged DataFrame of featureCounts
-    :type featureCounts: pd.DataFrame
-    :return: Only the Geneids and counts sample columns from featureCounts, i.e. the counts matrix.
+    :param feature_counts: A merged DataFrame of featureCounts
+    :type feature_counts: pd.DataFrame
+    :return: Only the Geneids and counts sample columns from feature_counts, i.e. the counts matrix.
     :rtype: pd.DataFrame
     """
     # extract featureCounts counts matrix
     gene_metadata_labels = ["Chr", "Start", "End", "Strand", "Length"]
     
-    return featureCounts.drop(columns=gene_metadata_labels)
+    return feature_counts.drop(columns=gene_metadata_labels)
+
+
+def extract_features_featureCounts(feature_counts: pd.DataFrame) -> pd.DataFrame:
+    """Extract the features metadata from featureCounts
+
+    :param feature_counts: A merged DataFrame of featureCounts.
+    :type feature_counts: pd.DataFrame
+    :return: Only the Geneids and features metadata.
+    :rtype: pd.DataFrame
+    """
+    # extract featureCounts counts matrix
+    gene_metadata_labels = ["Geneid", "Chr", "Start", "End", "Strand", "Length"]
+    
+    return feature_counts[gene_metadata_labels]
 
 
 def merge_featureCounts_counts(paths: List[str]) -> pd.DataFrame:
