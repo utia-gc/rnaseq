@@ -53,12 +53,27 @@ def main() -> None:
     logging.debug("Counts files: %s", args.files)
     logging.debug("Output file: %s", args.output)
 
-    merged_counts = merge_featureCounts_counts(args.files)
-
-    merged_counts.head().to_csv(sys.stdout, sep=",", index=False)
+    featureCounts = merge_featureCounts_counts(args.files)
+    counts_matrix = extract_matrix_featureCounts(featureCounts)
+    
+    counts_matrix.head().to_csv(sys.stdout, sep=",", index=False)
 
 
 # --------------------------------------------------
+def extract_matrix_featureCounts(featureCounts: pd.DataFrame) -> pd.DataFrame:
+    """Extract the counts matrix from featureCounts
+
+    :param featureCounts: A merged DataFrame of featureCounts
+    :type featureCounts: pd.DataFrame
+    :return: Only the Geneids and counts sample columns from featureCounts, i.e. the counts matrix.
+    :rtype: pd.DataFrame
+    """
+    # extract featureCounts counts matrix
+    gene_metadata_labels = ["Chr", "Start", "End", "Strand", "Length"]
+    
+    return featureCounts.drop(columns=gene_metadata_labels)
+
+
 def merge_featureCounts_counts(paths: List[str]) -> pd.DataFrame:
     """Make a merged DataFrame of featureCounts counts
 
