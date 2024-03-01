@@ -99,8 +99,12 @@ def extract_matrix_featureCounts(feature_counts: pd.DataFrame) -> pd.DataFrame:
     """
     # extract featureCounts counts matrix
     gene_metadata_labels = ["Chr", "Start", "End", "Strand", "Length"]
-    
-    return feature_counts.drop(columns=gene_metadata_labels)
+
+    counts = feature_counts.drop(columns=gene_metadata_labels)
+    # remove the '.bam' from the end of the sample names
+    counts.columns = counts.columns.str.replace("\\.bam$", "", regex=True)
+
+    return counts
 
 
 def extract_features_featureCounts(feature_counts: pd.DataFrame) -> pd.DataFrame:
