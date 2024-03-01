@@ -5,6 +5,8 @@ import argparse
 import logging
 from typing import List, NamedTuple
 
+import pandas as pd
+
 
 class Args(NamedTuple):
     """ Command-line arguments """
@@ -49,6 +51,23 @@ def main() -> None:
     args = get_args()
     logging.debug("Counts files: %s", args.files)
     logging.debug("Output file: %s", args.output)
+
+    for counts_file in args.files:
+        counts = read_featureCounts_counts(counts_file)
+
+
+# --------------------------------------------------
+def read_featureCounts_counts(path: str) -> pd.DataFrame:
+    """Read a file of counts output by featureCounts into a DataFrame
+
+    :param path: Path to featureCounts counts file
+    :type path: str
+    :return: DataFrame of featureCounts counts
+    :rtype: pd.DataFrame
+    """
+    counts = pd.read_csv(path, sep="\t", comment="#")
+
+    return counts
 
 
 # --------------------------------------------------
