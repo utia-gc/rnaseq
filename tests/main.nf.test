@@ -176,6 +176,8 @@ nextflow_pipeline {
 
 
     test("main.nf succeeds with default `nf_test` params") {
+        tag "full"
+
         // instantiate helper objects
         def readsSELane1 = new ReadsSELane1()
         def readsSELane2 = new ReadsSELane2()
@@ -267,6 +269,8 @@ nextflow_pipeline {
 
 
     test("main.nf succeeds with default `nf_test` params and uncompressed genome and annotation files.") {
+        tag "full"
+
         // instantiate helper objects
         def readsSELane1 = new ReadsSELane1()
         def readsSELane2 = new ReadsSELane2()
@@ -363,6 +367,8 @@ nextflow_pipeline {
 
 
     test("main.nf succeeds -- cutadapt.") {
+        tag "full"
+
         // instantiate helper objects
         def readsSELane1 = new ReadsSELane1()
         def readsSELane2 = new ReadsSELane2()
@@ -458,6 +464,8 @@ nextflow_pipeline {
     }
 
     test("main.nf succeeds -- bwa-mem2.") {
+        tag "full"
+
         // instantiate helper objects
         def readsSELane1 = new ReadsSELane1()
         def readsSELane2 = new ReadsSELane2()
