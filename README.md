@@ -200,7 +200,7 @@ flowchart LR
 
    ```bash
    nextflow run utia-gc/rnaseq \
-      -revision v0.2.2 \
+      -revision v0.3.0 \
       -profile nf_test
    ```
 
