@@ -104,6 +104,11 @@ def extract_matrix_featureCounts(feature_counts: pd.DataFrame) -> pd.DataFrame:
     # remove the '.bam' from the end of the sample names
     counts.columns = counts.columns.str.replace("\\.bam$", "", regex=True)
 
+    # sort columns by lexicographical order of column names 
+    counts.set_index(counts.columns[0], inplace=True)
+    counts = counts.reindex(sorted(counts.columns), axis=1)
+    counts.reset_index(inplace=True)
+
     return counts
 
 
