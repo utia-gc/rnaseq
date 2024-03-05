@@ -36,7 +36,7 @@ During exploratory analysis, iteratively make changes to parameters and run the 
 
 ```bash
 nextflow run utia-gc/rnaseq \
-   -revision v0.3.0 \
+   -revision v0.3.1 \
    -profile exploratory
 ```
 
@@ -44,7 +44,7 @@ Once you have settled on an optimal set of parameters, rerun the pipeline withou
 
 ```bash
 nextflow run utia-gc/rnaseq \
-   -revision v0.3.0 \
+   -revision v0.3.1 \
    -resume
 ```
 
@@ -54,6 +54,6 @@ For example, to resume from a run named 'boring_euler':
 
 ```bash
 nextflow run utia-gc/rnaseq \
-   -revision v0.3.0 \
+   -revision v0.3.1 \
    -resume boring_euler
 ```

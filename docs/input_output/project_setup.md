@@ -49,13 +49,13 @@ However, we highly recommended using both tools in the two simple steps outline 
 1. Setup the project directory from the pipeline repo with Cookiecutter:
 
     ```bash
-    cookiecutter gh:utia-gc/rnaseq --directory cookiecutter --checkout v0.3.0
+    cookiecutter gh:utia-gc/rnaseq --directory cookiecutter --checkout v0.3.1
     ```
 
 2. Run the project setup Nextflow script:
 
     ```bash
-    nextflow run utia-gc/rnaseq -main-script setup.nf -revision v0.3.0 -params-file src/nextflow/setup_params.yaml
+    nextflow run utia-gc/rnaseq -main-script setup.nf -revision v0.3.1 -params-file src/nextflow/setup_params.yaml
     ```
 
 ### Cookiecutter project template
@@ -69,7 +69,7 @@ We recommend following the installation instructions using pip inside a virtual 
 2. Setup the project directory from the pipeline repo with Cookiecutter:
 
     ```bash
-    cookiecutter gh:utia-gc/rnaseq --directory cookiecutter --checkout v0.3.0
+    cookiecutter gh:utia-gc/rnaseq --directory cookiecutter --checkout v0.3.1
     ```
 
     Simply follow the prompts and your project directory will be created.
@@ -85,5 +85,5 @@ We recommend following the installation instructions using pip inside a virtual 
 2. Run the project setup Nextflow script:
 
     ```bash
-    nextflow run utia-gc/rnaseq -main-script setup.nf -revision v0.3.0 -params-file src/nextflow/setup_params.yaml
+    nextflow run utia-gc/rnaseq -main-script setup.nf -revision v0.3.1 -params-file src/nextflow/setup_params.yaml
     ```
