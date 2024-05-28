@@ -1,0 +1,95 @@
+site_name: utia-gc/rnaseq
+site_url: https://utia-gc.github.io/rnaseq/
+repo_url: https://github.com/utia-gc/rnaseq
+edit_uri: edit/main/docs
+
+nav:
+  - 'Home': 'index.md'
+  - 'Input / Output':
+    - 'input_output/index.md'
+    - 'input_output/project_setup.md'
+    - 'input_output/required_params.md'
+    - 'input_output/samplesheet_format.md'
+    - 'input_output/outputs.md'
+  - 'Pipeline Configuration':
+    - 'pipeline_config/index.md'
+    - 'pipeline_config/arguments_to_processes.md'
+    - 'pipeline_config/exploratory_profile.md'
+  - 'Contribute':
+    - 'contribute/index.md'
+    - 'contribute/development.md'
+
+theme:
+  name: material
+
+  palette:
+  # Palette toggle for light mode
+    - media: "(preferes-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+  # Palette toggle for dark mode
+    - media: "(preferes-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+  features:
+    # Navigation features: https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.path
+    - navigation.indexes
+    - toc.follow
+    - navigation.top
+
+    # Site search features: https://squidfunk.github.io/mkdocs-material/setup/setting-up-site-search/
+    - search.highlight
+    - search.share
+
+    # Code actions: https://squidfunk.github.io/mkdocs-material/setup/adding-a-git-repository/#code-actions
+    - content.action.edit
+    - content.action.view
+
+    # Code blocks: https://squidfunk.github.io/mkdocs-material/reference/code-blocks/#code-blocks
+    - content.code.copy
+    - content.code.annotate
+
+  icon:
+    repo: fontawesome/brands/github
+    edit: material/pencil
+    view: material/eye
+
+plugins:
+  - search
+  - mike:
+      # These fields are all optional; the defaults are as below...
+      alias_type: symlink
+      redirect_template: null
+      deploy_prefix: ''
+      canonical_version: null
+      version_selector: true
+      css_dir: css
+      javascript_dir: js
+  - macros
+
+markdown_extensions:
+  # Enable code syntax highlighting and source code inclusion from other files
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+
+extra:
+  pipeline:
+    name: utia-gc/rnaseq
+    revision: v0.3.2
+  version:
+    provider: mike
+    alias: true

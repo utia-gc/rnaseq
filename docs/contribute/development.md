@@ -1,20 +1,4 @@
----
-title: Development
-layout: default
-parent: Contribute
----
-
 # Development
-{: .no_toc }
-
-<details open markdown="block">
-  <summary>
-    Table of contents
-  </summary>
-  {: .text-delta }
-- TOC
-{:toc}
-</details>
 
 ## Style conventions
 
@@ -22,15 +6,15 @@ It would be handy to be able to differentiate between modules, subworkflow, and 
 To make that happen, use the following naming conventions that imply a hierarchy:
 
 - Modules: lower_snake_case
-  - Example: `samtools_sort`
+  - Example: `#!groovy samtools_sort`
 - Subworkflow: Pascal_Snake_Case
-  - Example: `Prepare_Refs`
+  - Example: `#!groovy Prepare_Refs`
 - Workflow: UPPER_SNAKE_CASE
-  - Example: `PROCESS_READS`
+  - Example: `#!groovy PROCESS_READS`
 
 ## Testing
 
-Use the [`nf-test`](https://code.askimed.com/nf-test/) framework for testing.
+Use the [`nf-test`][nf_test_page] framework for testing.
 
 ### What to test
 
@@ -54,3 +38,5 @@ In order to simplify testing, I highly recommend a strategy something like the f
   - Test that the expected number of tasks succeed.
   - Test that the pipeline fails if given conditions for which it should fail.
   - Test tat expected files are produced in the proper publish directories.
+
+[nf_test_page]: https://code.askimed.com/nf-test/
