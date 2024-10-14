@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/utia-gc/ngs/master/nextflow_schema.json",
+  "title": "utia-gc/ngs pipeline parameters",
+  "description": "A Nextflow pipeline for base NGS analysis.",
+  "type": "object",
+  "defs": {
+    "input_output_options": {
+      "title": "Input/output options",
+      "type": "object",
+      "description": "",
+      "default": "",
+      "properties": {
+        "projectTitle": {
+          "type": "string",
+          "description": "A short title for the project. Used in naming files/directories.",
+          "pattern": "^[a-zA-Z0-9._-]+$",
+          "errorMessage": "Project title can ony contain alphanumeric characters, '.', '_', or '-'."
+        },
+        "samplesheet": {
+          "type": "string",
+          "description": "Path to input samplesheet in CSV format.",
+          "pattern": "^([a-zA-Z0-9/._-]+\\.csv|(?:[a-zA-Z]+)://[a-zA-Z0-9./_-]+\\.csv)$",
+          "errorMessage": "Samplesheet must be a .csv file with only alphanumeric characters, '.', '_', or '-' in file name."
+        },
+        "genome": {
+          "type": "string",
+          "description": "A path or URL to the reference genome sequence file in fasta format.",
+          "help_text": "For reasons of reproducibility and portability we recommend using direct links to reference genome sequence files available through repositories such as RefSeq and Ensembl."
+        },
+        "annotations": {
+          "type": "string",
+          "description": "A path or URL to the reference genome annotations file in GTF format.",
+          "help_text": "For reasons of reproducibility and portability we recommend using direct links to reference annotation files available through repositories such as RefSeq and Ensembl."
+        },
+        "publishDirData": {
+          "type": "string",
+          "default": "${launchDir}/data",
+          "description": "Base directory in which output data files will be published.",
+          "help_text": "We think of this pipeline as producing as producing two main types of output: data and reports. Data files are raw or processed files that are used for generating results and insights. They typically are not immediately interpretable by humans and often are not even human readable.\n\nExamples of data files would include raw fastq files, mappings in BAM format, tables of read counts within genes."
+        },
+        "publishDirReports": {
+          "type": "string",
+          "default": "${launchDir}/reports",
+          "description": "Base directory in which output reports files will be published.",
+          "help_text": "We think of this pipeline as producing as producing two main types of output: data and reports. Reports files are processed files that are used for immediately producing insights. They typically immediately interpretable by humans.\n\nExamples of reports files would include MultiQC reports and MultiQC data tables, summary statistics files produced by Samtools stats, etc."
+        },
+        "publishMode": {
+          "type": "string",
+          "default": "copy",
+          "description": "Method for publishing files.",
+          "enum": [
+            "copy",
+            "copyNoFollow",
+            "link",
+            "move",
+            "rellink",
+            "symlink"
+          ],
+          "help_text": "This sets the default mode for publishing files. See the `mode` section of the [`publishDir` Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details about the options."
+        }
+      },
+      "required": ["projectTitle", "samplesheet", "genome", "annotations"]
+    },
+    "read_trim_filter_options": {
+      "title": "Read trim/filter options",
+      "type": "object",
+      "description": "",
+      "default": "",
+      "properties": {
+        "trimTool": {
+          "type": "string",
+          "default": "fastp",
+          "description": "Tool for read trimming/filtering.",
+          "enum": ["fastp", "cutadapt"],
+          "errorMessage": "Trim tool must be one of the valid options: [fastp, cutadapt]."
+        },
+        "adapterFasta": {
+          "type": "string",
+          "default": "${projectDir}/assets/NO_FILE",
+          "description": "Fasta file of adapters for read trimming.",
+          "help_text": "`cutadapt` does not currently work with an adapter fasta file."
+        }
+      },
+      "required": ["trimTool"]
+    },
+    "mapping_parameters": {
+      "title": "Mapping parameters",
+      "type": "object",
+      "description": "",
+      "default": "",
+      "properties": {
+        "mapTool": {
+          "type": "string",
+          "default": "bwamem2",
+          "description": "Tool for mapping reads.",
+          "enum": ["bwamem2", "star"],
+          "errorMessage": "Map tool must be one of the valid options: [bwamem2, star]."
+        }
+      },
+      "required": ["mapTool"]
+    },
+    "skip_steps_options": {
+      "title": "Skip steps options",
+      "type": "object",
+      "description": "Options to skip pipeline execution steps.",
+      "default": "",
+      "properties": {
+        "skipTrimReads": {
+          "type": "boolean",
+          "description": "Skip read trimming steps. Will use raw reads for all downstream steps, e.g. read mapping."
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "$ref": "#/defs/input_output_options"
+    },
+    {
+      "$ref": "#/defs/read_trim_filter_options"
+    },
+    {
+      "$ref": "#/defs/mapping_parameters"
+    },
+    {
+      "$ref": "#/defs/skip_steps_options"
+    }
+  ]
+}

@@ -13,18 +13,24 @@ nextflow.enable.dsl=2
 ---------------------------------------------------------------------
 */
 
+// Include custom workflows
 include { CHECK_QUALITY  } from "./workflows/check_quality.nf"
 include { MAP_READS      } from "./workflows/map_reads.nf"
 include { PREPARE_INPUTS } from "./workflows/prepare_inputs.nf"
 include { PROCESS_READS  } from "./workflows/process_reads.nf"
 include { QUANTIFY       } from './workflows/quantify.nf'
 
-/*
----------------------------------------------------------------------
-    CHECK FOR REQUIRED PARAMETERS
----------------------------------------------------------------------
-*/
-PipelineValidator.validateRequiredParams(params, log)
+// Include plugin helper functions
+include { paramsHelp; validateParameters } from 'plugin/nf-schema'
+
+// Print help message with typical command line usage for the pipeline
+if (params.help) {
+    log.info paramsHelp('nextflow run utia-gc/rnaseq -params-file params.yaml')
+    exit 0
+}
+
+// Validate input parameters
+validateParameters()
 
 workflow {
     PREPARE_INPUTS(
@@ -49,7 +55,7 @@ workflow {
         ch_reads_pre_align,
         ch_genome,
         ch_annotations,
-        params.tools.map
+        params.mapTool
     )
     ch_alignmentsIndividualSortedByCoord = MAP_READS.out.alignmentsIndividualSortedByCoord
     ch_alignmentsMergedSortedByCoord     = MAP_READS.out.alignmentsMergedSortedByCoord
