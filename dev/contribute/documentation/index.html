@@ -8,11 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://utia-gc.github.io/rnaseq/dev/contribute/development/">
+        <link rel="canonical" href="https://utia-gc.github.io/rnaseq/dev/contribute/documentation/">
       
       
-        <link rel="prev" href="../documentation/">
+        <link rel="prev" href="../create_new_pipeline/">
       
+      
+        <link rel="next" href="../development/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -20,7 +22,7 @@
     
     
       
-        <title>Development - utia-gc/rnaseq</title>
+        <title>Documentation - utia-gc/rnaseq</title>
       
     
     
@@ -72,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#development" class="md-skip">
+        <a href="#documentation" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Development
+              Documentation
             
           </span>
         </div>
@@ -810,27 +812,6 @@
                 
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../documentation/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Documentation
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
     
   
   
@@ -847,7 +828,7 @@
           
   
   <span class="md-ellipsis">
-    Development
+    Documentation
   </span>
   
 
@@ -858,7 +839,7 @@
         
   
   <span class="md-ellipsis">
-    Development
+    Documentation
   </span>
   
 
@@ -880,35 +861,11 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#style-conventions" class="md-nav__link">
+  <a href="#development" class="md-nav__link">
     <span class="md-ellipsis">
-      Style conventions
+      Development
     </span>
   </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#testing" class="md-nav__link">
-    <span class="md-ellipsis">
-      Testing
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Testing">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#what-to-test" class="md-nav__link">
-    <span class="md-ellipsis">
-      What to test
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -916,6 +873,27 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Development
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -955,35 +933,11 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#style-conventions" class="md-nav__link">
+  <a href="#development" class="md-nav__link">
     <span class="md-ellipsis">
-      Style conventions
+      Development
     </span>
   </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#testing" class="md-nav__link">
-    <span class="md-ellipsis">
-      Testing
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Testing">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#what-to-test" class="md-nav__link">
-    <span class="md-ellipsis">
-      What to test
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1002,7 +956,7 @@
                   
 
   
-    <a href="https://github.com/utia-gc/rnaseq/edit/main/docs/contribute/development.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/utia-gc/rnaseq/edit/main/docs/contribute/documentation.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
     </a>
@@ -1011,51 +965,25 @@
     
       
     
-    <a href="https://github.com/utia-gc/rnaseq/raw/main/docs/contribute/development.md" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/utia-gc/rnaseq/raw/main/docs/contribute/documentation.md" title="View source of this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
     </a>
   
 
 
-<h1 id="development">Development</h1>
-<h2 id="style-conventions">Style conventions</h2>
-<p>It would be handy to be able to differentiate between modules, subworkflow, and workflows at a glance.
-To make that happen, use the following naming conventions that imply a hierarchy:</p>
-<ul>
-<li>Modules: lower_snake_case</li>
-<li>Example: <code class="language-groovy highlight"><span class="n">samtools_sort</span></code></li>
-<li>Subworkflow: Pascal_Snake_Case</li>
-<li>Example: <code class="language-groovy highlight"><span class="n">Prepare_Refs</span></code></li>
-<li>Workflow: UPPER_SNAKE_CASE</li>
-<li>Example: <code class="language-groovy highlight"><span class="n">PROCESS_READS</span></code></li>
-</ul>
-<h2 id="testing">Testing</h2>
-<p>Use the <a href="https://code.askimed.com/nf-test/"><code>nf-test</code></a> framework for testing.</p>
-<h3 id="what-to-test">What to test</h3>
-<p>Ideally, all processes, subworkflows, workflows, and pipelines should be tested.
-I (Trevor) am a proponent of test-driven (specifically behavior-driven) development, which means most everything will be tested as it is implemented.
-In order to simplify testing, I highly recommend a strategy something like the following:</p>
-<ul>
-<li>Processes</li>
-<li>Test processes for a combination of possible inputs to make sure it behaves as expected.</li>
-<li>Test that processes emit the expected channels.</li>
-<li>Do not test that processes produce expected files in the proper publish directories. This behavior should be tested at the workflow and pipeline levels.</li>
-<li>Subworkflows</li>
-<li>Same recommendations as processes.</li>
-<li>Workflows</li>
-<li>Test workflows for a combination of possible inputs and parameters used in workflows.<ul>
-<li>If subworkflows or processes can be skipped or behavior relies on parameters (e.g. allowed tools) make sure that it works here.</li>
-</ul>
-</li>
-<li>Test that workflows emit the expected channels.</li>
-<li>Test that expected files are produced in the proper publish directories.</li>
-<li>This is generally where the most extensive testing should be done - if workflows behave as expected then ideally so will the subworkflows and processes that comprise them as well the pipelines that they comprise.</li>
-<li>Pipelines</li>
-<li>Test that the expected number of tasks succeed.</li>
-<li>Test that the pipeline fails if given conditions for which it should fail.</li>
-<li>Test tat expected files are produced in the proper publish directories.</li>
-</ul>
+<h1 id="documentation">Documentation</h1>
+<p>Documentation should be included alongside development so that the project is kept in sync.</p>
+<p>The documentation is built using <a href="https://squidfunk.github.io/mkdocs-material/">Material for MkDocs</a>.
+This makes documentation easy to write, deploy, and manage as all docs are written in markdown files inside the <code>docs</code> directory.
+Deployment is handled automatically by GitHub Actions and GitHub pages.</p>
+<h2 id="development">Development</h2>
+<p>Writing docs should be simple.</p>
+<p>In many cases, an existing page can simply be added to.
+If a new page needs to be created, then simply create a new markdown file and include its path in the <code>nav</code> section of <code>/mkdocs.yml</code>.</p>
+<p>In order to serve a test site during development, ensure a virtual environment with the necessary plugins is loaded and execute the following command:</p>
+<div class="language-bash highlight"><span class="filename">Terminal</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>mkdocs<span class="w"> </span>serve
+</span></code></pre></div>
 
 
 

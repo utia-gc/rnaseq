@@ -8,11 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://utia-gc.github.io/rnaseq/dev/contribute/development/">
+        <link rel="canonical" href="https://utia-gc.github.io/rnaseq/dev/contribute/create_new_pipeline/">
       
       
-        <link rel="prev" href="../documentation/">
+        <link rel="prev" href="../">
       
+      
+        <link rel="next" href="../documentation/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -20,7 +22,7 @@
     
     
       
-        <title>Development - utia-gc/rnaseq</title>
+        <title>Create New Pipeline - utia-gc/rnaseq</title>
       
     
     
@@ -72,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#development" class="md-skip">
+        <a href="#create-new-pipeline" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Development
+              Create New Pipeline
             
           </span>
         </div>
@@ -789,10 +791,30 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../create_new_pipeline/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Create New Pipeline
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -801,6 +823,80 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#fork-the-pipeline-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fork the pipeline repository
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#make-a-local-clone-of-your-pipeline-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      Make a local clone of your pipeline repository
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#change-pipeline-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      Change pipeline name
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup-virtual-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setup virtual environment
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploy-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deploy documentation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conclusion
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -831,30 +927,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Development
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../development/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -863,59 +939,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#style-conventions" class="md-nav__link">
-    <span class="md-ellipsis">
-      Style conventions
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#testing" class="md-nav__link">
-    <span class="md-ellipsis">
-      Testing
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Testing">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#what-to-test" class="md-nav__link">
-    <span class="md-ellipsis">
-      What to test
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -955,35 +978,56 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#style-conventions" class="md-nav__link">
+  <a href="#fork-the-pipeline-repository" class="md-nav__link">
     <span class="md-ellipsis">
-      Style conventions
+      Fork the pipeline repository
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#testing" class="md-nav__link">
+  <a href="#make-a-local-clone-of-your-pipeline-repository" class="md-nav__link">
     <span class="md-ellipsis">
-      Testing
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Testing">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#what-to-test" class="md-nav__link">
-    <span class="md-ellipsis">
-      What to test
+      Make a local clone of your pipeline repository
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#change-pipeline-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      Change pipeline name
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup-virtual-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setup virtual environment
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploy-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deploy documentation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conclusion
+    </span>
+  </a>
   
 </li>
       
@@ -1002,7 +1046,7 @@
                   
 
   
-    <a href="https://github.com/utia-gc/rnaseq/edit/main/docs/contribute/development.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/utia-gc/rnaseq/edit/main/docs/contribute/create_new_pipeline.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
     </a>
@@ -1011,50 +1055,133 @@
     
       
     
-    <a href="https://github.com/utia-gc/rnaseq/raw/main/docs/contribute/development.md" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/utia-gc/rnaseq/raw/main/docs/contribute/create_new_pipeline.md" title="View source of this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
     </a>
   
 
 
-<h1 id="development">Development</h1>
-<h2 id="style-conventions">Style conventions</h2>
-<p>It would be handy to be able to differentiate between modules, subworkflow, and workflows at a glance.
-To make that happen, use the following naming conventions that imply a hierarchy:</p>
-<ul>
-<li>Modules: lower_snake_case</li>
-<li>Example: <code class="language-groovy highlight"><span class="n">samtools_sort</span></code></li>
-<li>Subworkflow: Pascal_Snake_Case</li>
-<li>Example: <code class="language-groovy highlight"><span class="n">Prepare_Refs</span></code></li>
-<li>Workflow: UPPER_SNAKE_CASE</li>
-<li>Example: <code class="language-groovy highlight"><span class="n">PROCESS_READS</span></code></li>
-</ul>
-<h2 id="testing">Testing</h2>
-<p>Use the <a href="https://code.askimed.com/nf-test/"><code>nf-test</code></a> framework for testing.</p>
-<h3 id="what-to-test">What to test</h3>
-<p>Ideally, all processes, subworkflows, workflows, and pipelines should be tested.
-I (Trevor) am a proponent of test-driven (specifically behavior-driven) development, which means most everything will be tested as it is implemented.
-In order to simplify testing, I highly recommend a strategy something like the following:</p>
-<ul>
-<li>Processes</li>
-<li>Test processes for a combination of possible inputs to make sure it behaves as expected.</li>
-<li>Test that processes emit the expected channels.</li>
-<li>Do not test that processes produce expected files in the proper publish directories. This behavior should be tested at the workflow and pipeline levels.</li>
-<li>Subworkflows</li>
-<li>Same recommendations as processes.</li>
-<li>Workflows</li>
-<li>Test workflows for a combination of possible inputs and parameters used in workflows.<ul>
-<li>If subworkflows or processes can be skipped or behavior relies on parameters (e.g. allowed tools) make sure that it works here.</li>
-</ul>
+<h1 id="create-new-pipeline">Create New Pipeline</h1>
+<p><code>utia-gc/rnaseq</code> and pipelines built on <code>utia-gc/ngs</code> are meant to be readily and easily extensible to facilitate quick development of pipelines for processing NGS data.
+This document provides recommendations for creating a new pipeline based on <code>utia-gc/rnaseq</code>.</p>
+<h2 id="fork-the-pipeline-repository">Fork the pipeline repository</h2>
+<p>The easiest way to create a new pipeline is to make a fork of the existing pipeline on GitHub.</p>
+<ol>
+<li>Navigate to the <a href="https://github.com/utia-gc/rnaseq">pipeline's GitHub repository</a></li>
+<li>Check to see if a pipeline matching your needs already exists -- Click the arrow next to the Fork button in the top right corner of the page to show a list of all the pipelines associated with <code>utia-gc/rnaseq</code>.</li>
+<li>If you need to create a new pipeline, click the <code>Create a new fork</code> button below the dropdown list or just the <code>Fork</code> button at the top right of the repo code page.
+    Note this requires a GitHub account.
+    If you aren't logged in you will be redirected to the login page where you must either login or create a GitHub account if you don't have one already.</li>
+<li>Follow the prompts to create your fork with your desired pipeline name and description.
+    I recommend only copying the <code>main</code> branch, which should be selected by default.</li>
+</ol>
+<h2 id="make-a-local-clone-of-your-pipeline-repository">Make a local clone of your pipeline repository</h2>
+<p>To effectively edit your pipeline, make a local clone of your pipeline's repository on the computer where you will develop your pipeline (your development environment).</p>
+<ol>
+<li>Copy your pipeline URL -- Click the green <code>Code</code> button in the top right of your pipeline repo code page and copy the URL.
+I typically use the HTTPS.</li>
+<li>Open a terminal session in your development environment and navigate to the directory where you want to create the clone of your pipeline repo.</li>
+<li>
+<p>Clone your pipeline repo:</p>
+<div class="language-bash highlight"><span class="filename">Terminal</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>--recurse-submodules<span class="w"> </span>&lt;repository-URL&gt;
+</span></code></pre></div>
+<div class="admonition note">
+<p class="admonition-title"><code>--recurse-submodules</code></p>
+<p>All local test data is located in <code>tests/data</code> which is setup as a <a href="https://git-scm.com/book/en/v2/Git-Tools-Submodules">git submodule</a>.
+Supplying the <code>--recurse-submodules</code> argument to <code>git clone</code> will clone the correct repository into <code>tests/data</code> so that you can run tests.</p>
+<p>If you don't clone submodules at this step it's possible to do this later, but it's easier to do it at this project setup unless you have a reason not to.</p>
+</div>
 </li>
-<li>Test that workflows emit the expected channels.</li>
-<li>Test that expected files are produced in the proper publish directories.</li>
-<li>This is generally where the most extensive testing should be done - if workflows behave as expected then ideally so will the subworkflows and processes that comprise them as well the pipelines that they comprise.</li>
-<li>Pipelines</li>
-<li>Test that the expected number of tasks succeed.</li>
-<li>Test that the pipeline fails if given conditions for which it should fail.</li>
-<li>Test tat expected files are produced in the proper publish directories.</li>
+</ol>
+<h2 id="change-pipeline-name">Change pipeline name</h2>
+<p>One of the first changes that needs to be made is updating the pipeline name throughout the repo.</p>
+<p>In most places this isn't strictly necessary as the repository name is primarily found in comments and the docs, but it's still best to update it at this point, otherwise you'll probably forget to update it ever which will create confusion down the line.</p>
+<p>How exactly you do this depends on your environment and what you find easiest.
+I typically in the IDE VS Code, and I like the Find in file feature that it has available in the file explorer paine for searching and replacing.
+<code>grep</code>ping for the old repo name and manually editing files is another fine solution.</p>
+<div class="admonition warning">
+<p class="admonition-title">Don't blindly find and replace</p>
+<p>I very explicitly recommend not doing a blind, automated search and replace with a tool like <code>sed</code> or in the IDE of your choice.
+You never know what exactly is being found and replaced in those cases, so you can accidentally break something.
+For example, if you blindly replace all instances of <code>ngs</code> in your repo with <code>atacseq</code> then an important reference to a <code>settings.config</code> file would instead reference <code>settiatacseq.py</code> and wreak who knows what havoc.</p>
+<p>Take a few minutes to do things by hand -- it's better to set things up correctly to begin with.</p>
+</div>
+<h2 id="setup-virtual-environment">Setup virtual environment</h2>
+<p>Developing your pipeline will involve a few Python tools, and Python best practices demands the use of virtual environments.</p>
+<ol>
+<li>
+<p>Create the virtual environment.
+I recommend using the <code>venv</code> module to create a virtual environment in the <code>.venv</code> directory.
+This module does everything we need and ships with Python and therefore doesn't require any additional installations.</p>
+<div class="language-bash highlight"><span class="filename">Terminal</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
+</span></code></pre></div>
+</li>
+<li>
+<p>Activate the virtual environment.
+You should activate your virtual environment every time you develop in this repository.
+A good IDE like VS Code can handle this for you so that activation is automated.</p>
+<div class="language-bash highlight"><span class="filename">Terminal</span><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+</span></code></pre></div>
+</li>
+<li>
+<p>Install packages into the virtual environment
+Now that your virtual environment is setup, all that's left to do is install the necessary packages in your environment so that you can use them.
+This is easy to do with the <code>requirements.txt</code> that is forked and cloned inside your new pipeline repo.</p>
+<div class="language-bash highlight"><span class="filename">Terminal</span><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</span></code></pre></div>
+</li>
+</ol>
+<h2 id="deploy-documentation">Deploy documentation</h2>
+<p>Documentation for <code>utia-gc/rnaseq</code> is deployed on GitHub Pages from a branch that is maintained by GitHub Actions.
+This means that you set up document deployment once and you shouldn't have to think about manually deploying documentation again.</p>
+<ol>
+<li>
+<p>Enable GitHub actions in your repo</p>
+<ol>
+<li>Navigate to your pipeline repo on GitHub</li>
+<li>Select the <code>Actions</code> tab</li>
+<li>If there is a message saying Actions have been disabled, click the big green button in the center of the screen to enable actions.</li>
+</ol>
+</li>
+<li>
+<p class="annotate">Make <code>gh-pages</code> branch.
+The easiest way to deploy your docs to GitHub Pages will be to deploy them from a branch, specifically the <code>gh-pages</code> branch (1) .
+The easiest way to do this is to simply make a new commit and push it to your main branch.
+This will trigger the GitHub Action for building the dev version of your docs.
+When the workflow is completed, check your repo on GitHub and verify that a <code>gh-pages</code> branch (2) exists.</p>
+<ol>
+<li>There is nothing special about this branch name other than the fact that it is the branch name for the docs that get built by MkDocs when the GitHub Action runs.
+We strongly recommend using the <code>gh-pages</code> branch name for this reason.</li>
+<li>This branch will be on your remote repository on GitHub, and I recommend leaving it there.
+You won't have much of a reason to create a local copy and edit it since this branch will be constantly rebuilt and redeployed as you make new commits on <code>origin/main</code> and create release branches.</li>
+</ol>
+</li>
+<li>
+<p>Set GitHub Pages to deploy from a branch.</p>
+<ol>
+<li>From your repository home page, go to the pages settings: <code>Settings</code> &gt; <code>Pages</code></li>
+<li>Under "Build and deployment" select Source: "Deploy from a branch" (should be selected by default)</li>
+<li>Under Branch select <code>gh-pages</code>, then "/ (root)"</li>
+<li>Click <code>Save</code></li>
+</ol>
+</li>
+<li>
+<p>Update the docs link in the sidebar and README.
+It will likely take a few minutes for GitHub Pages to integrate changes from the deployment branch to the actual website.
+Once your site is live, the <code>Settings</code> &gt; <code>Pages</code> page will have a link to your docs site.
+Visit that link to make sure everything looks as expected.</p>
+</li>
+</ol>
+<p>Once you have verified the site looks good, don't forget to update the links to the docs in your repo's About section (top right of the Code page).
+This is also a good time to verify that the link to the full documentation in the README correctly points to your docs pages.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>By the end of this tutorial you should have the following:</p>
+<ul>
+<li>A remote GitHub repository for your new pipeline forked off of <code>utia-gc/rnaseq</code>.</li>
+<li>A clone of your GitHub repo in your preferred development environment with a virtual environment created and activated.</li>
+<li>A working documentation website on GitHub Pages.</li>
+<li>All references throughout the pipeline and docs should have your pipeline name instead of <code>utia-gc/rnaseq</code>.</li>
 </ul>
 
 
