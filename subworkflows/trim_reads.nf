@@ -12,19 +12,16 @@ workflow Trim_Reads {
         adapter_fasta
 
     main:
-        switch( Tools.Trim.valueOf(trim_tool.toUpperCase()) ) {
-            case Tools.Trim.CUTADAPT:
+        switch( trim_tool.toUpperCase() ) {
+            case 'CUTADAPT':
                 cutadapt(
-                    reads_raw,
-                    params.r1_adapter,
-                    params.r2_adapter,
-                    params.minimum_length
+                    reads_raw
                 )
                 ch_reads_trim = cutadapt.out.reads
                 ch_trim_log   = cutadapt.out.log
                 break
 
-            case Tools.Trim.FASTP:
+            case 'FASTP':
                 fastp(
                     reads_raw,
                     adapter_fasta
@@ -34,7 +31,7 @@ workflow Trim_Reads {
                 break
         }
 
-        // update trim status in metadat
+        // update trim status in metadata
         ch_reads_trim
             .map { metadata, reads1, reads2 ->
                 def meta = metadata.clone()

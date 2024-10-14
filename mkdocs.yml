@@ -5,6 +5,8 @@ edit_uri: edit/main/docs
 
 nav:
   - 'Home': 'index.md'
+  - 'Quick Start':
+    - 'quick_start/index.md'
   - 'Input / Output':
     - 'input_output/index.md'
     - 'input_output/project_setup.md'
@@ -15,8 +17,11 @@ nav:
     - 'pipeline_config/index.md'
     - 'pipeline_config/arguments_to_processes.md'
     - 'pipeline_config/exploratory_profile.md'
+    - 'pipeline_config/params.md'
   - 'Contribute':
     - 'contribute/index.md'
+    - 'contribute/create_new_pipeline.md'
+    - 'contribute/documentation.md'
     - 'contribute/development.md'
 
 theme:
@@ -77,6 +82,10 @@ plugins:
   - macros
 
 markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - pymdownx.details
   # Enable code syntax highlighting and source code inclusion from other files
   - pymdownx.highlight:
       anchor_linenums: true

@@ -3,68 +3,28 @@ nextflow_pipeline {
     name "Test Workflow main.nf"
     script "main.nf"
 
-    test("main.nf fails -- no input samplesheet.") {
-        tag "validate"
+    test("main.nf prints help message") {
+        tag 'nf-schema'
 
         when {
             params {
                 publishDirReports = "${outputDir}/reports"
                 publishDirData    = "${outputDir}/data"
-                samplesheet       = null
+                help              = true
             }
         }
 
         then {
-            assert workflow.failed
-            assert workflow.exitStatus == 64
-            assert workflow.stdout.contains("ERROR ~ Parameter 'samplesheet' is required but was not provided.")
+            // It doesn't seem like nf-test supports testing against text printed by log.info, so for now just check that exit code is 0 (workflow succeeds) and no tasks are executed.
+            assert workflow.success
+            assert workflow.trace.succeeded().size() == 0
         }
-
-    }
-
-
-    test("main.nf fails -- no reference genome.") {
-        tag "validate"
-
-        when {
-            params {
-                publishDirReports = "${outputDir}/reports"
-                publishDirData    = "${outputDir}/data"
-                genome            = null
-            }
-        }
-
-        then {
-            assert workflow.failed
-            assert workflow.exitStatus == 64
-            assert workflow.stdout.contains("ERROR ~ Parameter 'genome' is required but was not provided.")
-        }
-
-    }
-
-
-    test("main.nf fails -- no reference annotations.") {
-        tag "validate"
-
-        when {
-            params {
-                publishDirReports = "${outputDir}/reports"
-                publishDirData    = "${outputDir}/data"
-                annotations       = null
-            }
-        }
-
-        then {
-            assert workflow.failed
-            assert workflow.exitStatus == 64
-            assert workflow.stdout.contains("ERROR ~ Parameter 'annotations' is required but was not provided.")
-        }
-
     }
 
 
     test("main.nf fails -- no project title.") {
-        tag "validate"
+        tag 'nf-schema'
+        tag 'validate'
 
         when {
             params {
@@ -75,108 +35,285 @@ nextflow_pipeline {
         }
 
         then {
+            // nf-schema validateParameters() causes workflow failure with exit status 1 when required param(s) not supplied
             assert workflow.failed
-            assert workflow.exitStatus == 64
-            assert workflow.stdout.contains("ERROR ~ Parameter 'projectTitle' is required but was not provided.")
+            assert workflow.exitStatus == 1
+            // nf-schema validateParameters() throws error messages on stdout and stderr when required param(s) not supplied
+            assert workflow.stdout.contains("ERROR ~ Validation of pipeline parameters failed!")
+            assert workflow.stderr.contains("* Missing required parameter(s): projectTitle")
+        }
+
+    }
+
+
+    test("main.nf fails -- spaces in `params.projectTitle`.") {
+        tag 'nf-schema'
+        tag 'validate'
+
+        when {
+            params {
+                publishDirReports = "${outputDir}/reports"
+                publishDirData    = "${outputDir}/data"
+                projectTitle      = 'project title'
+            }
+        }
+
+        then {
+            // nf-schema validateParameters() causes workflow failure with exit status 1 when required param(s) don't match pattern
+            assert workflow.failed
+            assert workflow.exitStatus == 1
+            // nf-schema validateParameters() throws error messages on stdout and stderr when required param(s) don't match pattern
+            assert workflow.stdout.contains('ERROR ~ Validation of pipeline parameters failed!')
+            assert workflow.stderr.contains("* --projectTitle (project title): Project title can ony contain alphanumeric characters, '.', '_', or '-'.")
+        }
+
+    }
+
+
+    test("main.nf fails -- slashes in `params.projectTitle`.") {
+        tag 'nf-schema'
+        tag 'validate'
+
+        when {
+            params {
+                publishDirReports = "${outputDir}/reports"
+                publishDirData    = "${outputDir}/data"
+                projectTitle      = 'project/title'
+            }
+        }
+
+        then {
+            // nf-schema validateParameters() causes workflow failure with exit status 1 when required param(s) don't match pattern
+            assert workflow.failed
+            assert workflow.exitStatus == 1
+            // nf-schema validateParameters() throws error messages on stdout and stderr when required param(s) don't match pattern
+            assert workflow.stdout.contains('ERROR ~ Validation of pipeline parameters failed!')
+            assert workflow.stderr.contains("* --projectTitle (project/title): Project title can ony contain alphanumeric characters, '.', '_', or '-'.")
+        }
+
+    }
+
+
+    test("main.nf fails -- no input samplesheet.") {
+        tag 'nf-schema'
+        tag 'validate'
+
+        when {
+            params {
+                publishDirReports = "${outputDir}/reports"
+                publishDirData    = "${outputDir}/data"
+                samplesheet       = null
+            }
+        }
+
+        then {
+            // nf-schema validateParameters() causes workflow failure with exit status 1 when required param(s) not supplied
+            assert workflow.failed
+            assert workflow.exitStatus == 1
+            // nf-schema validateParameters() throws error messages on stdout and stderr when required param(s) not supplied
+            assert workflow.stdout.contains("ERROR ~ Validation of pipeline parameters failed!")
+            assert workflow.stderr.contains("* Missing required parameter(s): samplesheet")
+        }
+
+    }
+
+
+    test("main.nf fails -- .txt file for `params.samplesheet`.") {
+        tag 'nf-schema'
+        tag 'validate'
+
+        when {
+            params {
+                publishDirReports = "${outputDir}/reports"
+                publishDirData    = "${outputDir}/data"
+                samplesheet       = "${projectDir}/tests/data/samplesheets/invalid/samplesheet_not_csv_file.txt"
+            }
+        }
+
+        then {
+            // nf-schema validateParameters() causes workflow failure with exit status 1 when required param(s) don't match pattern
+            assert workflow.failed
+            assert workflow.exitStatus == 1
+            // nf-schema validateParameters() throws error messages on stdout and stderr when required param(s) don't match pattern
+            assert workflow.stdout.contains("ERROR ~ Validation of pipeline parameters failed!")
+        }
+
+    }
+
+
+    test("main.nf fails -- file name with spaces for `params.samplesheet`.") {
+        tag 'nf-schema'
+        tag 'validate'
+
+        when {
+            params {
+                publishDirReports = "${outputDir}/reports"
+                publishDirData    = "${outputDir}/data"
+                samplesheet       = "${projectDir}/tests/data/samplesheets/invalid/spaces in samplesheet name.csv"
+            }
+        }
+
+        then {
+            // nf-schema validateParameters() causes workflow failure with exit status 1 when required param(s) don't match pattern
+            assert workflow.failed
+            assert workflow.exitStatus == 1
+            // nf-schema validateParameters() throws error messages on stdout and stderr when required param(s) don't match pattern
+            assert workflow.stdout.contains("ERROR ~ Validation of pipeline parameters failed!")
+        }
+
+    }
+
+
+    test("main.nf fails -- no reference genome.") {
+        tag 'nf-schema'
+        tag 'validate'
+
+        when {
+            params {
+                publishDirReports = "${outputDir}/reports"
+                publishDirData    = "${outputDir}/data"
+                genome            = null
+            }
+        }
+
+        then {
+            // nf-schema validateParameters() causes workflow failure with exit status 1 when required param(s) don't match pattern
+            assert workflow.failed
+            assert workflow.exitStatus == 1
+            // nf-schema validateParameters() throws error messages on stdout and stderr when required param(s) don't match pattern
+            assert workflow.stdout.contains("ERROR ~ Validation of pipeline parameters failed!")
+            assert workflow.stderr.contains("* Missing required parameter(s): genome")
+        }
+
+    }
+
+
+    test("main.nf fails -- no reference annotations.") {
+        tag 'nf-schema'
+        tag 'validate'
+
+        when {
+            params {
+                publishDirReports = "${outputDir}/reports"
+                publishDirData    = "${outputDir}/data"
+                annotations       = null
+            }
+        }
+
+        then {
+            // nf-schema validateParameters() causes workflow failure with exit status 1 when required param(s) don't match pattern
+            assert workflow.failed
+            assert workflow.exitStatus == 1
+            // nf-schema validateParameters() throws error messages on stdout and stderr when required param(s) don't match pattern
+            assert workflow.stdout.contains("ERROR ~ Validation of pipeline parameters failed!")
+            assert workflow.stderr.contains("* Missing required parameter(s): annotations")
         }
 
     }
 
 
     test("main.nf fails -- no trim tool.") {
-        tag "validate"
-        tag "tools"
+        tag 'nf-schema'
+        tag 'validate'
+        tag 'tools'
 
         when {
             params {
                 publishDirReports = "${outputDir}/reports"
                 publishDirData    = "${outputDir}/data"
-                tools {
-                    trim = null
-                }
+                trimTool          = null
             }
         }
 
         then {
+            // nf-schema validateParameters() causes workflow failure with exit status 1 when required param(s) don't match pattern
             assert workflow.failed
-            assert workflow.exitStatus == 64
-            assert workflow.stdout.contains("ERROR ~ Parameter 'tools.trim' is required but was not provided.")
+            assert workflow.exitStatus == 1
+            // nf-schema validateParameters() throws error messages on stdout and stderr when required param(s) don't match pattern
+            assert workflow.stdout.contains("ERROR ~ Validation of pipeline parameters failed!")
+            assert workflow.stderr.contains("* Missing required parameter(s): trimTool")
         }
 
     }
 
 
     test("main.nf fails -- invalid trim tool.") {
-        tag "validate"
-        tag "tools"
+        tag 'nf-schema'
+        tag 'validate'
+        tag 'tools'
 
         when {
             params {
                 publishDirReports = "${outputDir}/reports"
                 publishDirData    = "${outputDir}/data"
-                tools {
-                    trim = 'bowtie2'
-                }
+                trimTool          = 'bowtie2'
             }
         }
 
         then {
+            // nf-schema validateParameters() causes workflow failure with exit status 1 when required param(s) don't match pattern
             assert workflow.failed
-            assert workflow.exitStatus == 64
-            assert workflow.stdout.contains("ERROR ~ 'bowtie2' is not a valid trim tool.")
+            assert workflow.exitStatus == 1
+            // nf-schema validateParameters() throws error messages on stdout and stderr when required param(s) don't match pattern
+            assert workflow.stdout.contains("ERROR ~ Validation of pipeline parameters failed!")
+            assert workflow.stderr.contains("* --trimTool (bowtie2): Trim tool must be one of the valid options: [fastp, cutadapt].")
         }
 
     }
 
 
     test("main.nf fails -- no map tool.") {
-        tag "validate"
-        tag "tools"
+        tag 'nf-schema'
+        tag 'validate'
+        tag 'tools'
 
         when {
             params {
                 publishDirReports = "${outputDir}/reports"
                 publishDirData    = "${outputDir}/data"
-                tools {
-                    map = null
-                }
+                mapTool           = null
             }
         }
 
         then {
+            // nf-schema validateParameters() causes workflow failure with exit status 1 when required param(s) don't match pattern
             assert workflow.failed
-            assert workflow.exitStatus == 64
-            assert workflow.stdout.contains("ERROR ~ Parameter 'tools.map' is required but was not provided.")
+            assert workflow.exitStatus == 1
+            // nf-schema validateParameters() throws error messages on stdout and stderr when required param(s) don't match pattern
+            assert workflow.stdout.contains("ERROR ~ Validation of pipeline parameters failed!")
+            assert workflow.stderr.contains("* Missing required parameter(s): mapTool")
         }
 
     }
 
 
     test("main.nf fails -- invalid map tool.") {
-        tag "validate"
-        tag "tools"
+        tag 'nf-schema'
+        tag 'validate'
+        tag 'tools'
 
         when {
             params {
                 publishDirReports = "${outputDir}/reports"
                 publishDirData    = "${outputDir}/data"
-                tools {
-                    map = 'trimmomatic'
-                }
+                mapTool           = 'trimmomatic'
             }
         }
 
         then {
+            // nf-schema validateParameters() causes workflow failure with exit status 1 when required param(s) don't match pattern
             assert workflow.failed
-            assert workflow.exitStatus == 64
-            assert workflow.stdout.contains("ERROR ~ 'trimmomatic' is not a valid map tool.")
+            assert workflow.exitStatus == 1
+            // nf-schema validateParameters() throws error messages on stdout and stderr when required param(s) don't match pattern
+            assert workflow.stdout.contains("ERROR ~ Validation of pipeline parameters failed!")
+            assert workflow.stderr.contains("* --mapTool (trimmomatic): Map tool must be one of the valid options: [bwamem2, star].")
         }
 
     }
 
 
     test("main.nf succeeds with default `nf_test` params") {
-        tag "full"
+        tag 'full'
 
         // instantiate helper objects
         def readsSELane1 = new ReadsSELane1()
@@ -269,7 +406,7 @@ nextflow_pipeline {
 
 
     test("main.nf succeeds with default `nf_test` params and uncompressed genome and annotation files.") {
-        tag "full"
+        tag 'full'
 
         // instantiate helper objects
         def readsSELane1 = new ReadsSELane1()
@@ -282,8 +419,8 @@ nextflow_pipeline {
             params {
                 publishDirReports = "${outputDir}/reports"
                 publishDirData    = "${outputDir}/data"
-                genome            = "${refs.getGenome()}"
-                annotations       = "${refs.getGTF()}"
+                genome            = "${projectDir}/${refs.getGenome()}"
+                annotations       = "${projectDir}/${refs.getGTF()}"
             }
         }
 
@@ -367,7 +504,7 @@ nextflow_pipeline {
 
 
     test("main.nf succeeds -- cutadapt.") {
-        tag "full"
+        tag 'full'
 
         // instantiate helper objects
         def readsSELane1 = new ReadsSELane1()
@@ -377,11 +514,9 @@ nextflow_pipeline {
 
         when {
             params {
-                tools {
-                    trim = 'cutadapt'
-                }
                 publishDirReports = "${outputDir}/reports"
                 publishDirData    = "${outputDir}/data"
+                trimTool          = 'cutadapt'
             }
         }
 
@@ -464,7 +599,7 @@ nextflow_pipeline {
     }
 
     test("main.nf succeeds -- bwa-mem2.") {
-        tag "full"
+        tag 'full'
 
         // instantiate helper objects
         def readsSELane1 = new ReadsSELane1()
@@ -474,11 +609,9 @@ nextflow_pipeline {
 
         when {
             params {
-                tools {
-                    map = 'bwamem2'
-                }
                 publishDirReports = "${outputDir}/reports"
                 publishDirData    = "${outputDir}/data"
+                mapTool           = 'bwamem2'
             }
         }
 

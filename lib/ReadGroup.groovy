@@ -16,12 +16,12 @@ import java.util.zip.GZIPInputStream
  */
 public static String buildRGLine(rgFields, tool) {
     String rgLine = ''
-    switch (tool) {
-        case Tools.Map.BWAMEM2:
+    switch (tool.toUpperCase()) {
+        case 'BWAMEM2':
             rgLine = buildBwaMem2RGLine(rgFields)
             break
 
-        case Tools.Map.STAR:
+        case 'STAR':
             rgLine = buildSTARRGLine(rgFields)
             break
     }
@@ -79,7 +79,7 @@ static LinkedHashMap buildRGFields(metadata, matcher) {
         rgFields += ['ID': "${matcher.group('instrument')}_${matcher.group('runNumber')}_${matcher.group('flowcellID')}.${matcher.group('lane')}"]
         rgFields += ['PU': "${matcher.group('flowcellID')}.${matcher.group('lane')}.${matcher.group('index')}"]
     } else {
-        rgFields += ['ID': "${metadata.sampleName}.${metadata.lane}"]
+        rgFields += ['ID': metadata.lane ? "${metadata.sampleName}.${metadata.lane}" : "${metadata.sampleName}"]
     }
 
     // add more straightforwardly determined dynamic fields

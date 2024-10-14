@@ -114,6 +114,10 @@
                 ]
             }
         ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "23.10.1"
+        },
         "timestamp": "2024-04-02T10:20:42.412114832"
     },
     "MAP_READS maps reads to a reference genome and outputs sorted BAMs -- bwa-mem2 + SE reads.": {
@@ -231,6 +235,10 @@
                 ]
             }
         ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "23.10.1"
+        },
         "timestamp": "2024-04-02T10:19:05.063904655"
     },
     "MAP_READS maps reads to a reference genome and outputs sorted BAMs -- bwa-mem2 + PE reads.": {
@@ -348,6 +356,10 @@
                 ]
             }
         ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "23.10.1"
+        },
         "timestamp": "2024-04-02T10:19:34.770717278"
     },
     "MAP_READS maps reads to a reference genome and outputs sorted BAMs -- STAR + PE reads.": {
@@ -465,6 +477,10 @@
                 ]
             }
         ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "23.10.1"
+        },
         "timestamp": "2024-04-02T10:24:39.637400944"
     }
 }
