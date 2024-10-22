@@ -26,10 +26,16 @@ workflow QUANTIFY {
 
         // collect all of the counts files for input into make_counts_matrix
         featureCounts.out.counts
-            .map { metadata, counts ->
-                counts
-            }
-            .collect( sort: true )
+            .collect(
+                // get counts file only -- lose the metadata
+                { metadata, counts ->
+                    return counts
+                },
+                // sort based on file name
+                sort: { a, b ->
+                    a.name <=> b.name
+                }
+            )
             .set { ch_countsCollected }
         ch_countsCollected.dump(tag: 'ch_countsCollected')
 

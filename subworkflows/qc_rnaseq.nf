@@ -25,7 +25,11 @@ workflow QC_Rnaseq {
         ch_multiqc_rnaseq = Channel.empty()
             .concat(qualimap_rnaseq.out.qualimapRnaseq)
             .concat(quantify_log)
-            .collect( sort: true )
+            .collect(
+                sort: { a, b ->
+                    a.name <=> b.name
+                }
+            )
 
         multiqc_rnaseq(
             ch_multiqc_rnaseq,
