@@ -40,7 +40,7 @@ process featureCounts {
         path '*.txt.summary',               emit: countsSummary
     
     script:
-        String args = new Args(task.ext).buildArgsString()
+        String args = new Args(argsDefault: task.ext.argsDefault, argsDynamic: task.ext.argsDynamic, argsUser: task.ext.argsUser).buildArgsString()
 
         """
         featureCounts \\
