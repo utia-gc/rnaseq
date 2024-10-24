@@ -1,138 +1,168 @@
 workflow {
-    // make translation table of read names to sample name
-    decode = file(params.decode)
-    decodeTable = [:]
-    decode.eachLine { line, number ->
-        // skip first line since it's header
-        if (number == 1) {
-            return
-        }
+    LinkedHashMap decodeMap = buildSampleNameDecodeMap(file(params.decode))
 
-        def splitLine = line.split(',')
-        if (splitLine[0] == params.project) {
-            def readsName = splitLine[1]
-            def sampleName = (splitLine.size() == 3) ? splitLine[2] : ''
-            decodeTable.put(readsName, sampleName)
-        }
-    }
+    fastqPairs = Channel
+        .fromFilePairs(params.readsSources, checkIfExists: true, size: -1)
+        .dump(tag: 'fastq file pairs', pretty: true)
 
-    readsSources = validateReadsSources(params.readsSources)
-    readsDest    = file(params.readsDest)
-
-    COPY_READS(
-        readsSources,
-        readsDest,
-        decodeTable
+    COPY_FASTQS(
+        fastqPairs,
+        file(params.readsDest),
+        params.overwrite
     )
 
-    samplesheet = file(params.samplesheet)
-
     WRITE_SAMPLESHEET(
-        readsDest,
-        samplesheet,
-        decodeTable
+        COPY_FASTQS.out.copiedFastqPairs,
+        file(params.samplesheet),
+        decodeMap
     )
 }
 
 
-workflow COPY_READS {
+workflow COPY_FASTQS {
     take:
-        source_reads_dirs
-        destination_reads_dir
-        decode_table
+        fastqPairs
+        destinationDir
+        overwrite
 
     main:
         // make the destination directory
-        destination_reads_dir.mkdirs()
+        destinationDir.mkdirs()
 
-        // combine patterns to match
-        def combinedPatterns = decode_table.keySet().toList().join('|')
-        log.info "Patterns to search for matches: ${combinedPatterns}"
-
-        // iterate through all fastq.gz files in source directories
-        source_reads_dirs.each { sourceReadsDir ->
-            sourceReadsDir.eachFileMatch(~/.*(${combinedPatterns}).*\.fastq\.gz/) { fastq ->
-                // copy fastq file to destination directory if it does not already exist in the destination directory
-                if (isExtantInDestination(fastq, destination_reads_dir)) {
-                    log.info "fastq file '${fastq}' already exists in '${destination_reads_dir}'. Did not copy."
-                    return
-                } else {
-                    def fastqDestPath = fastq.copyTo(destination_reads_dir)
-                    log.info "Copied fastq file '${fastq}' --> '${fastqDestPath}'"
-                }
-            }
+        // iterate through all fastq file pairs
+        fastqPairs.map { fastqPrefix, fastqs ->
+            ArrayList fastqCopiedPaths = copyFastqs(fastqs, destinationDir, overwrite)
+            return [fastqPrefix, fastqCopiedPaths]
         }
+        .tap { copiedFastqPairs }
+        .dump(tag: "Copied fastqs", pretty: true)
+
+    emit:
+        copiedFastqPairs = copiedFastqPairs
 }
 
 
 workflow WRITE_SAMPLESHEET {
     take:
-        reads_dir
+        copiedFastqPairs
         samplesheet
-        decode_table
+        decodeMap
 
     main:
-        // create channel of read pairs
-        Channel
-            .fromFilePairs("${reads_dir}/*_R{1,2}_001.fastq.gz", size: -1, checkIfExists: true)
-            .set { ch_readPairs }
-        ch_readPairs.dump(tag: "ch_readPairs")
-
         // cast ch_readPairs to a map and write to a file
-        ch_readPairs
+        copiedFastqPairs
             .map { stemName, reads ->
                 def stemNameInfo = captureFastqStemNameInfo(stemName)
-                "${decode_table.get(stemNameInfo.sampleName) ?: stemNameInfo.sampleName},${stemNameInfo.lane},${reads[0]},${reads[1] ?: ''}"
+
+                def sampleName = decodeMap.get(stemNameInfo.sampleName) ?: stemNameInfo.sampleName
+                def lane       = stemNameInfo.lane
+                def reads1     = reads[0]
+                def reads2     = reads[1] ?: ''
+
+                return [sampleName, lane, reads1, reads2].join(',')
             }
             .collectFile(
                 name: samplesheet.name,
                 newLine: true,
                 storeDir: samplesheet.parent,
                 sort: true,
-                seed: 'sampleName,lane,reads1,reads2'
+                seed: buildSamplesheetHeader()
             )
 }
 
 
-def captureFastqStemNameInfo(String stemName) {
-    def capturePattern = /(.*)_S(\d+)_L(\d{3})/
-    def fastqMatcher = (stemName =~ capturePattern)
+String buildSamplesheetHeader() {
+    ArrayList header = ['sampleName', 'lane', 'reads1', 'reads2']
 
-    if (fastqMatcher.find()) {
-        stemNameInfo = [:]
-        stemNameInfo.put('sampleName', fastqMatcher.group(1))
-        // stemNameInfo.put('sampleNumber', fastqMatcher.group(2))
-        stemNameInfo.put('lane', fastqMatcher.group(3))
-
-        return stemNameInfo
-    } else {
-        log.error "fastq file stem manes do not "
-    }
+    return header.join(',')
 }
 
 
 /**
- * Validate reads source directories.
+ * Copy fastq files into the specified destination directory.
  *
- * @param  readsSources The params.readsSources argument
- * @return              A list of files to the paths specified in readsSources.
+ * @param fastqs        Collection of fastq files to be copied.
+ * @param desinationDir Path destination directory to copy fastq files into.
+ * @param overwrite     Boolean for whether or not to replace the fastq files if they already exist in the destination directory.
+ *
+ * @return ArrayList of fastq file paths in the destination directory. Even if files were not copied, e.g. because they already exist, the path to them in the desination directory is added to the list.
  */
-def validateReadsSources(readsSources) {
-    if (readsSources instanceof List) {
-        // if readsSources is a list of strings, return a list containing file objects of those strings
-        if (readsSources.every { it instanceof String }) {
-            return readsSources.collect { file(it, checkIfExists: true) }
+ArrayList copyFastqs(fastqs, destinationDir, overwrite) {
+    // keep track of the paths fastqs have been copied to
+    ArrayList fastqCopiedPaths = []
+
+    // Either copy or skip copying each fastq file
+    fastqs.each { fastq ->
+        // Skip copying the fastq file if it already exists in the destination directory and overwriting is turned off.
+        if (existsInDestination(fastq, destinationDir) && !overwrite) {
+            log.info "fastq file '${fastq}' already exists in '${destinationDir}' and `params.overwrite` = false. Did not copy."
+            // add the copied fastq name to the list
+            fastqCopiedPaths << destinationDir.resolve(fastq.name)
+            return
+        } else {
+            // Copy the fastq file
+            def fastqDestPath = fastq.copyTo(destinationDir)
+            log.info "Copied fastq file '${fastq}' --> '${fastqDestPath}'"
+            // add the copied fastq name to the list
+            fastqCopiedPaths << fastqDestPath
         }
-        else {
-            throw new IllegalArgumentException("params.readsSources is a list but contains non-string elements. Must be a list of valid paths or a single valid path.")
-        }
-    } else if (readsSources instanceof String) {
-        // if readsSources is a string, return a list containing a file object of that string
-        return [file(readsSources, checkIfExists: true)]
-    } else {
-        // if readsSources is neither a list of strings nor a string, throw an expection
-        throw new IllegalArgumentException("params.readsSources must be a list of valid paths or a single valid path.")
     }
+
+    return fastqCopiedPaths
+}
+
+
+/**
+ * Make translation table of read names to sample name.
+ *
+ * @param decode The Path to build the decode map from. First column is the sample name as found in the fastq file. Second column is the desired sample name.
+ *
+ * @return LinkedHashMap with keys as fastq sample names, and values as sample names.
+ */
+def buildSampleNameDecodeMap(decode) {
+    // make translation table of read names to sample name
+    LinkedHashMap decodeMap = [:]
+    decode.eachLine { line, number ->
+        // skip first line since it's header
+        if (number == 1) {
+            return
+        }
+
+        // split CSV lines and build map from sample name as it exists in fastq file name (column 1) to desired sample name (column 2)
+        def (fastqSampleName, sampleName) = line.split(',')
+        decodeMap.put(fastqSampleName, sampleName)
+    }
+
+    return decodeMap
+}
+
+
+/**
+ * Capture information about the fastq file from the stem name, i.e. the part of the file name matched with Channel.fromFastqPairs.
+ *
+ * This function seeks to match information from the fastq stem name against the conventional name output by Illumina bcl2fastq, that is: '<SampleName>_S<SampleNumber>_L<LaneNumber>'.
+ * This function returns a map with keys 'sampleName' and 'lane'.
+ * For stemNames that match the conventional Illumina fastq name format, the sampleName value is the matched SampleName portion of the stemName, and the lane values is the matched LaneNumber portion.
+ * If the stemName does not match Illumina's conventional format, the whole stemName is set as the sampleName value, and the lane value is set to an empty string.
+ *
+ * @param stemName String of the stemName from the fastq file name
+ *
+ * @return LinkedHashMap with 'sampleName' and 'lane' keys.
+ */
+def captureFastqStemNameInfo(String stemName) {
+    def capturePattern = /(.*)_S(\d+)_L(\d{3})/
+    def fastqMatcher = (stemName =~ capturePattern)
+
+    LinkedHashMap stemNameInfo = [:]
+    if (fastqMatcher.find()) {
+        stemNameInfo.put('sampleName', fastqMatcher.group(1))
+        stemNameInfo.put('lane', fastqMatcher.group(3))
+    } else {
+        stemNameInfo.put('sampleName', stemName)
+        stemNameInfo.put('lane', '')
+    }
+
+    return stemNameInfo
 }
 
 
@@ -143,6 +173,6 @@ def validateReadsSources(readsSources) {
  * @param destinationDir The desination directory to check for the source file name.
  * @return               `true` if the source file exists in the destination directory.
  */
-boolean isExtantInDestination(sourceFile, destinationDir) {
+boolean existsInDestination(sourceFile, destinationDir) {
     return destinationDir.resolve(sourceFile.name).exists()
 }

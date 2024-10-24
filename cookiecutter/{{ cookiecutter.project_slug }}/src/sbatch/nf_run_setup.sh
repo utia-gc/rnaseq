@@ -25,6 +25,7 @@ nextflow pull utia-gc/rnaseq
 # run pipeline
 nextflow run utia-gc/rnaseq \
     -main-script setup.nf \
-    -revision v0.3.2 \
+    -revision {{ cookiecutter.pipeline_revision }} \
     -profile condo_trowan1 \
-    -params-file config/params_setup.yaml
+    -config config/nextflow/setup.config \
+    -params-file config/nextflow/params_setup.yaml
