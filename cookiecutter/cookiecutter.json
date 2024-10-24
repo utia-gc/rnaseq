@@ -7,7 +7,7 @@
     "project_name": "{{ cookiecutter.project_date }} {{ cookiecutter.project_owner_last }} {{ cookiecutter.project_organism }} {{ cookiecutter.project_brief }} {{ cookiecutter.project_type }}",
     "project_slug": "{{ cookiecutter.project_date }}-{{ cookiecutter.project_owner_last|lower }}-{{ cookiecutter.project_organism|lower|replace(' ', '-') }}-{{ cookiecutter.project_brief|lower|replace(' ', '_') }}-{{ cookiecutter.project_type|lower|replace(' ', '_') }}",
     "project_purpose": "Analyze RNA-seq data.",
-    "pipeline_revision": ["main", "v0.3.2", "v0.3.1", "v0.3.0", "v0.2.2", "v0.2.1", "v0.2.0", "v0.1.0"],
+    "pipeline_revision": ["v0.4.0", "v0.3.2", "v0.3.1", "v0.3.0", "v0.2.2", "v0.2.1", "v0.2.0", "v0.1.0", "main"],
     "reads_source_dir": "",
     "email": "",
     "author": "",
