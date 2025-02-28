@@ -112,11 +112,13 @@
         },
         "skipRawReadDepth": {
           "type": "boolean",
-          "description": "Skip computing read depth for raw reads."
+          "description": "Skip computing read depth for raw reads.",
+          "default": true
         },
         "skipPrealignReadDepth": {
           "type": "boolean",
-          "description": "Skip computing read depth for prealign reads."
+          "description": "Skip computing read depth for prealign reads.",
+          "default": true
         }
       }
     }
