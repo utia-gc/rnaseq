@@ -25,7 +25,7 @@ A Nextflow pipeline for base NGS analysis.
 
 | Parameter | Description | Type | Default | Required | Hidden |
 |-----------|-----------|-----------|-----------|-----------|-----------|
-| `mapTool` | Tool for mapping reads. | `string` | bwamem2 | True |  |
+| `mapTool` | Tool for mapping reads. | `string` | star | True |  |
 
 ## Skip steps options
 

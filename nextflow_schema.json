@@ -92,7 +92,7 @@
       "properties": {
         "mapTool": {
           "type": "string",
-          "default": "bwamem2",
+          "default": "star",
           "description": "Tool for mapping reads.",
           "enum": ["bwamem2", "star"],
           "errorMessage": "Map tool must be one of the valid options: [bwamem2, star]."
