@@ -36,6 +36,6 @@ nextflow -log .cache/nf_logs/rnaseq.log \
     run \
         -revision "${revision}" \
         -profile condo_trowan1,exploratory \
-        -config config/nextflow/rnasesq.config \
+        -config config/nextflow/rnaseq.config \
         -params-file config/nextflow/params_rnaseq.yaml \
     utia-gc/rnaseq
