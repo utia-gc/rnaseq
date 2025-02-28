@@ -9,9 +9,11 @@ sample_decode := config/samplesheets/sample-name-decode.csv
 samplesheet := config/samplesheets/samplesheet.csv
 # Process data
 ## Data processing pipeline files
-nf_ngs_config := config/nextflow/ngs.config
-nf_ngs_params := config/nextflow/params_ngs.yaml
-nf_ngs_script := src/sbatch/nf_run_ngs.sh
+nf_rnaseq_config := config/nextflow/rnaseq.config
+nf_rnaseq_params := config/nextflow/params_rnaseq.yaml
+nf_rnaseq_script := src/sbatch/nf_run_rnaseq.sh
+## RNA-seq pipeline output counts files
+counts := data/counts/{{ cookiecutter.project_slug }}_counts.csv
 
 
 .PHONY: all
@@ -29,9 +31,12 @@ $(samplesheet): .cache/nf_logs/setup.log
 	@sbatch --wait --verbose $(nf_setup_script)
 
 .PHONY: process
-process: .cache/nf_logs/ngs.log
+process: $(counts)
 	@echo "Ran data processing"
 
-.cache/nf_logs/ngs.log: $(samplesheet) $(nf_ngs_config) $(nf_ngs_params) $(nf_ngs_script)
+$(counts): .cache/nf_logs/rnaseq.log
+	@touch $(counts)
+
+.cache/nf_logs/rnaseq.log: $(samplesheet) $(nf_rnaseq_config) $(nf_rnaseq_params) $(nf_rnaseq_script)
 	@echo "Run data processing pipeline"
-	@sbatch --wait --verbose $(nf_ngs_script)
+	@sbatch --wait --verbose $(nf_rnaseq_script)
