@@ -92,7 +92,7 @@
       "properties": {
         "mapTool": {
           "type": "string",
-          "default": "bwamem2",
+          "default": "star",
           "description": "Tool for mapping reads.",
           "enum": ["bwamem2", "star"],
           "errorMessage": "Map tool must be one of the valid options: [bwamem2, star]."
@@ -112,11 +112,13 @@
         },
         "skipRawReadDepth": {
           "type": "boolean",
-          "description": "Skip computing read depth for raw reads."
+          "description": "Skip computing read depth for raw reads.",
+          "default": true
         },
         "skipPrealignReadDepth": {
           "type": "boolean",
-          "description": "Skip computing read depth for prealign reads."
+          "description": "Skip computing read depth for prealign reads.",
+          "default": true
         }
       }
     }

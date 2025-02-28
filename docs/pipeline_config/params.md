@@ -34,5 +34,5 @@ Options to skip pipeline execution steps.
 | Parameter | Description | Type | Default | Required | Hidden |
 |-----------|-----------|-----------|-----------|-----------|-----------|
 | `skipTrimReads` | Skip read trimming steps. Will use raw reads for all downstream steps, e.g. read mapping. | `boolean` |  |  |  |
-| `skipRawReadDepth` | Skip computing read depth for raw reads. | `boolean` |  |  |  |
-| `skipPrealignReadDepth` | Skip computing read depth for prealign reads. | `boolean` |  |  |  |
+| `skipRawReadDepth` | Skip computing read depth for raw reads. | `boolean` | True |  |  |
+| `skipPrealignReadDepth` | Skip computing read depth for prealign reads. | `boolean` | True |  |  |
