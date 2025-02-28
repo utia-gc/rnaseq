@@ -1,3 +1,5 @@
+params.writeR2ToSamplesheet = true
+
 workflow {
     LinkedHashMap decodeMap = buildSampleNameDecodeMap(file(params.decode))
 
@@ -14,7 +16,8 @@ workflow {
     WRITE_SAMPLESHEET(
         COPY_FASTQS.out.copiedFastqPairs,
         file(params.samplesheet),
-        decodeMap
+        decodeMap,
+        params.writeR2ToSamplesheet
     )
 }
 
@@ -47,6 +50,7 @@ workflow WRITE_SAMPLESHEET {
         copiedFastqPairs
         samplesheet
         decodeMap
+        writeR2ToSamplesheet
 
     main:
         // cast ch_readPairs to a map and write to a file
@@ -57,7 +61,7 @@ workflow WRITE_SAMPLESHEET {
                 def sampleName = decodeMap.get(stemNameInfo.sampleName) ?: stemNameInfo.sampleName
                 def lane       = stemNameInfo.lane
                 def reads1     = reads[0]
-                def reads2     = reads[1] ?: ''
+                def reads2     = reads[1] && writeR2ToSamplesheet ? reads[1] : ''
 
                 return [sampleName, lane, reads1, reads2].join(',')
             }
