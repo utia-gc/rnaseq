@@ -334,11 +334,9 @@ nextflow_pipeline {
             /*
                 Count number succeeded tasks:
                     Check quality:
-                        - 1: Count bases in genome
                         - 4: MultiQC -- Reads, mappings, RNA-seq, full
                         - 2 * (n fastq pairs): FastQC -- Raw and prealigned
                         - 2 * (n fastq pairs): Samtools idxstats and flagstat
-                        - 2 * (n samples): Count bases in reads -- Raw and prealigned
                         - 1 * (n samples): Samtools stats
                         - 1 * (n samples): Qualimap RNA-seq
                     Map reads:
@@ -357,11 +355,11 @@ nextflow_pipeline {
             */
             Integer expectedSucceededTraces = new TraceSucceededMainWorkflow(
                 [
-                    constants: 10,
+                    constants: 9,
                     nFastqPairs: 4,
                     fastqPairsTasks: 7,
                     nSamples: 2,
-                    samplesTasks: 8,
+                    samplesTasks: 6,
                 ]
             ).size()
             assert workflow.trace.succeeded().size() == expectedSucceededTraces
@@ -465,11 +463,9 @@ nextflow_pipeline {
             /*
                 Count number succeeded tasks:
                     Check quality:
-                        - 1: Count bases in genome
                         - 4: MultiQC -- Reads, mappings, RNA-seq, full
                         - 2 * (n fastq pairs): FastQC -- Raw and prealigned
                         - 2 * (n fastq pairs): Samtools idxstats and flagstat
-                        - 2 * (n samples): Count bases in reads -- Raw and prealigned
                         - 1 * (n samples): Samtools stats
                         - 1 * (n samples): Qualimap RNA-seq
                     Map reads:
@@ -487,11 +483,11 @@ nextflow_pipeline {
             */
             Integer expectedSucceededTraces = new TraceSucceededMainWorkflow(
                 [
-                    constants: 8,
+                    constants: 7,
                     nFastqPairs: 4,
                     fastqPairsTasks: 7,
                     nSamples: 2,
-                    samplesTasks: 8,
+                    samplesTasks: 6,
                 ]
             ).size()
             assert workflow.trace.succeeded().size() == expectedSucceededTraces
@@ -593,11 +589,9 @@ nextflow_pipeline {
             /*
                 Count number succeeded tasks:
                     Check quality:
-                        - 1: Count bases in genome
                         - 4: MultiQC -- Reads, mappings, RNA-seq, full
                         - 2 * (n fastq pairs): FastQC -- Raw and prealigned
                         - 2 * (n fastq pairs): Samtools idxstats and flagstat
-                        - 2 * (n samples): Count bases in reads -- Raw and prealigned
                         - 1 * (n samples): Samtools stats
                         - 1 * (n samples): Qualimap RNA-seq
                     Map reads:
@@ -616,11 +610,11 @@ nextflow_pipeline {
             */
             Integer expectedSucceededTraces = new TraceSucceededMainWorkflow(
                 [
-                    constants: 10,
+                    constants: 9,
                     nFastqPairs: 4,
                     fastqPairsTasks: 7,
                     nSamples: 2,
-                    samplesTasks: 8,
+                    samplesTasks: 6,
                 ]
             ).size()
             assert workflow.trace.succeeded().size() == expectedSucceededTraces
@@ -721,11 +715,9 @@ nextflow_pipeline {
             /*
                 Count number succeeded tasks:
                     Check quality:
-                        - 1: Count bases in genome
                         - 4: MultiQC -- Reads, mappings, RNA-seq, full
                         - 2 * (n fastq pairs): FastQC -- Raw and prealigned
                         - 2 * (n fastq pairs): Samtools idxstats and flagstat
-                        - 2 * (n samples): Count bases in reads -- Raw and prealigned
                         - 1 * (n samples): Samtools stats
                         - 1 * (n samples): Qualimap RNA-seq
                     Map reads:
@@ -744,11 +736,11 @@ nextflow_pipeline {
             */
             Integer expectedSucceededTraces = new TraceSucceededMainWorkflow(
                 [
-                    constants: 10,
+                    constants: 9,
                     nFastqPairs: 4,
                     fastqPairsTasks: 7,
                     nSamples: 2,
-                    samplesTasks: 8,
+                    samplesTasks: 6,
                 ]
             ).size()
             assert workflow.trace.succeeded().size() == expectedSucceededTraces
@@ -826,9 +818,8 @@ nextflow_pipeline {
 
     }
 
-    test("main.nf succeeds -- skip raw and prealigned read depth") {
+    test("main.nf succeeds -- compute raw and prealigned read depth") {
         tag 'full'
-        tag 'current'
 
         // instantiate helper objects
         def readsSELane1 = new ReadsSELane1()
@@ -840,8 +831,8 @@ nextflow_pipeline {
             params {
                 publishDirReports     = "${outputDir}/reports"
                 publishDirData        = "${outputDir}/data"
-                skipRawReadDepth      = true
-                skipPrealignReadDepth = true
+                skipRawReadDepth      = false
+                skipPrealignReadDepth = false
             }
         }
 
@@ -851,9 +842,11 @@ nextflow_pipeline {
             /*
                 Count number succeeded tasks:
                     Check quality:
+                        - 1: Count bases in genome
                         - 4: MultiQC -- Reads, mappings, RNA-seq, full
                         - 2 * (n fastq pairs): FastQC -- Raw and prealigned
                         - 2 * (n fastq pairs): Samtools idxstats and flagstat
+                        - 2 * (n samples): Count bases in reads -- Raw and prealigned
                         - 1 * (n samples): Samtools stats
                         - 1 * (n samples): Qualimap RNA-seq
                     Map reads:
@@ -872,11 +865,11 @@ nextflow_pipeline {
             */
             Integer expectedSucceededTraces = new TraceSucceededMainWorkflow(
                 [
-                    constants: 9,
+                    constants: 10,
                     nFastqPairs: 4,
                     fastqPairsTasks: 7,
                     nSamples: 2,
-                    samplesTasks: 6,
+                    samplesTasks: 8,
                 ]
             ).size()
             assert workflow.trace.succeeded().size() == expectedSucceededTraces
