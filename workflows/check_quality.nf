@@ -11,6 +11,7 @@ workflow CHECK_QUALITY {
         genome_index
         alignmentsIndividual
         alignmentsMerged
+        projectTitle
 
     main:
         QC_Reads(
@@ -38,6 +39,6 @@ workflow CHECK_QUALITY {
         multiqc_full(
             ch_multiqc_full,
             file("${projectDir}/assets/multiqc_config.yaml"),
-            params.projectTitle
+            projectTitle
         )
 }

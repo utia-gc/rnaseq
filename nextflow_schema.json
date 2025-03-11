@@ -58,6 +58,10 @@
             "symlink"
           ],
           "help_text": "This sets the default mode for publishing files. See the `mode` section of the [`publishDir` Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details about the options."
+        },
+        "exploratoryTag": {
+          "type": "string",
+          "description": "Tag to add to the end of the exploratory directory name to describe what's being explored. Use in conjunction with the `exploratory` profile."
         }
       },
       "required": ["projectTitle", "samplesheet", "genome", "annotations"]

@@ -66,6 +66,7 @@ workflow {
         ch_trim_log,
         ch_genome_index,
         ch_alignmentsIndividualSortedByCoord,
-        ch_alignmentsMergedSortedByCoord
+        ch_alignmentsMergedSortedByCoord,
+        "${params.projectTitle}"
     )
 }
