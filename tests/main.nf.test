@@ -413,14 +413,14 @@ nextflow_pipeline {
             assert path("${params.publishDirData}/alignments/${readsPELane1.getSampleName()}.bam").exists()
             assert path("${params.publishDirData}/alignments/${readsPELane1.getSampleName()}.bam.bai").exists()
             // test qualimap rnaseq QC directory is written to reports dir
-            assert path("${params.publishDirReports}/rnaseq/qualimap/${readsSELane1.getSampleName()}_rnaseq_qc").exists()
-            assert path("${params.publishDirReports}/rnaseq/qualimap/${readsPELane1.getSampleName()}_rnaseq_qc").exists()
+            assert path("${params.publishDirReports}/.rnaseq/qualimap/${readsSELane1.getSampleName()}_rnaseq_qc").exists()
+            assert path("${params.publishDirReports}/.rnaseq/qualimap/${readsPELane1.getSampleName()}_rnaseq_qc").exists()
             // test featureCounts counts files published to data dir
             assert path("${params.publishDirData}/counts/${readsSELane1.getSampleName()}.txt").exists()
             assert path("${params.publishDirData}/counts/${readsPELane1.getSampleName()}.txt").exists()
             // test featureCounts summary files published to reports dir
-            assert path("${params.publishDirReports}/counts/${readsSELane1.getSampleName()}.txt.summary").exists()
-            assert path("${params.publishDirReports}/counts/${readsPELane1.getSampleName()}.txt.summary").exists()
+            assert path("${params.publishDirReports}/.counts/${readsSELane1.getSampleName()}.txt.summary").exists()
+            assert path("${params.publishDirReports}/.counts/${readsPELane1.getSampleName()}.txt.summary").exists()
             // test merged counts files and feature metadata published to data dir
             assert path("${params.publishDirData}/counts/rnaseq_nf-test_counts.csv").exists()
             assert path("${params.publishDirData}/counts/rnaseq_nf-test_counts_feature_metadata.csv").exists()
@@ -541,14 +541,14 @@ nextflow_pipeline {
             assert path("${params.publishDirData}/alignments/${readsPELane1.getSampleName()}.bam").exists()
             assert path("${params.publishDirData}/alignments/${readsPELane1.getSampleName()}.bam.bai").exists()
             // test qualimap rnaseq QC directory is written to reports dir
-            assert path("${params.publishDirReports}/rnaseq/qualimap/${readsSELane1.getSampleName()}_rnaseq_qc").exists()
-            assert path("${params.publishDirReports}/rnaseq/qualimap/${readsPELane1.getSampleName()}_rnaseq_qc").exists()
+            assert path("${params.publishDirReports}/.rnaseq/qualimap/${readsSELane1.getSampleName()}_rnaseq_qc").exists()
+            assert path("${params.publishDirReports}/.rnaseq/qualimap/${readsPELane1.getSampleName()}_rnaseq_qc").exists()
             // test featureCounts counts files published to data dir
             assert path("${params.publishDirData}/counts/${readsSELane1.getSampleName()}.txt").exists()
             assert path("${params.publishDirData}/counts/${readsPELane1.getSampleName()}.txt").exists()
             // test featureCounts summary files published to reports dir
-            assert path("${params.publishDirReports}/counts/${readsSELane1.getSampleName()}.txt.summary").exists()
-            assert path("${params.publishDirReports}/counts/${readsPELane1.getSampleName()}.txt.summary").exists()
+            assert path("${params.publishDirReports}/.counts/${readsSELane1.getSampleName()}.txt.summary").exists()
+            assert path("${params.publishDirReports}/.counts/${readsPELane1.getSampleName()}.txt.summary").exists()
             // test merged counts files and feature metadata published to data dir
             assert path("${params.publishDirData}/counts/rnaseq_nf-test_counts.csv").exists()
             assert path("${params.publishDirData}/counts/rnaseq_nf-test_counts_feature_metadata.csv").exists()
@@ -668,14 +668,14 @@ nextflow_pipeline {
             assert path("${params.publishDirData}/alignments/${readsPELane1.getSampleName()}.bam").exists()
             assert path("${params.publishDirData}/alignments/${readsPELane1.getSampleName()}.bam.bai").exists()
             // test qualimap rnaseq QC directory is written to reports dir
-            assert path("${params.publishDirReports}/rnaseq/qualimap/${readsSELane1.getSampleName()}_rnaseq_qc").exists()
-            assert path("${params.publishDirReports}/rnaseq/qualimap/${readsPELane1.getSampleName()}_rnaseq_qc").exists()
+            assert path("${params.publishDirReports}/.rnaseq/qualimap/${readsSELane1.getSampleName()}_rnaseq_qc").exists()
+            assert path("${params.publishDirReports}/.rnaseq/qualimap/${readsPELane1.getSampleName()}_rnaseq_qc").exists()
             // test featureCounts counts files published to data dir
             assert path("${params.publishDirData}/counts/${readsSELane1.getSampleName()}.txt").exists()
             assert path("${params.publishDirData}/counts/${readsPELane1.getSampleName()}.txt").exists()
             // test featureCounts summary files published to reports dir
-            assert path("${params.publishDirReports}/counts/${readsSELane1.getSampleName()}.txt.summary").exists()
-            assert path("${params.publishDirReports}/counts/${readsPELane1.getSampleName()}.txt.summary").exists()
+            assert path("${params.publishDirReports}/.counts/${readsSELane1.getSampleName()}.txt.summary").exists()
+            assert path("${params.publishDirReports}/.counts/${readsPELane1.getSampleName()}.txt.summary").exists()
             // test merged counts files and feature metadata published to data dir
             assert path("${params.publishDirData}/counts/rnaseq_nf-test_counts.csv").exists()
             assert path("${params.publishDirData}/counts/rnaseq_nf-test_counts_feature_metadata.csv").exists()
@@ -794,14 +794,14 @@ nextflow_pipeline {
             assert path("${params.publishDirData}/alignments/${readsPELane1.getSampleName()}.bam").exists()
             assert path("${params.publishDirData}/alignments/${readsPELane1.getSampleName()}.bam.bai").exists()
             // test qualimap rnaseq QC directory is written to reports dir
-            assert path("${params.publishDirReports}/rnaseq/qualimap/${readsSELane1.getSampleName()}_rnaseq_qc").exists()
-            assert path("${params.publishDirReports}/rnaseq/qualimap/${readsPELane1.getSampleName()}_rnaseq_qc").exists()
+            assert path("${params.publishDirReports}/.rnaseq/qualimap/${readsSELane1.getSampleName()}_rnaseq_qc").exists()
+            assert path("${params.publishDirReports}/.rnaseq/qualimap/${readsPELane1.getSampleName()}_rnaseq_qc").exists()
             // test featureCounts counts files published to data dir
             assert path("${params.publishDirData}/counts/${readsSELane1.getSampleName()}.txt").exists()
             assert path("${params.publishDirData}/counts/${readsPELane1.getSampleName()}.txt").exists()
             // test featureCounts summary files published to reports dir
-            assert path("${params.publishDirReports}/counts/${readsSELane1.getSampleName()}.txt.summary").exists()
-            assert path("${params.publishDirReports}/counts/${readsPELane1.getSampleName()}.txt.summary").exists()
+            assert path("${params.publishDirReports}/.counts/${readsSELane1.getSampleName()}.txt.summary").exists()
+            assert path("${params.publishDirReports}/.counts/${readsPELane1.getSampleName()}.txt.summary").exists()
             // test merged counts files and feature metadata published to data dir
             assert path("${params.publishDirData}/counts/rnaseq_nf-test_counts.csv").exists()
             assert path("${params.publishDirData}/counts/rnaseq_nf-test_counts_feature_metadata.csv").exists()
@@ -923,14 +923,14 @@ nextflow_pipeline {
             assert path("${params.publishDirData}/alignments/${readsPELane1.getSampleName()}.bam").exists()
             assert path("${params.publishDirData}/alignments/${readsPELane1.getSampleName()}.bam.bai").exists()
             // test qualimap rnaseq QC directory is written to reports dir
-            assert path("${params.publishDirReports}/rnaseq/qualimap/${readsSELane1.getSampleName()}_rnaseq_qc").exists()
-            assert path("${params.publishDirReports}/rnaseq/qualimap/${readsPELane1.getSampleName()}_rnaseq_qc").exists()
+            assert path("${params.publishDirReports}/.rnaseq/qualimap/${readsSELane1.getSampleName()}_rnaseq_qc").exists()
+            assert path("${params.publishDirReports}/.rnaseq/qualimap/${readsPELane1.getSampleName()}_rnaseq_qc").exists()
             // test featureCounts counts files published to data dir
             assert path("${params.publishDirData}/counts/${readsSELane1.getSampleName()}.txt").exists()
             assert path("${params.publishDirData}/counts/${readsPELane1.getSampleName()}.txt").exists()
             // test featureCounts summary files published to reports dir
-            assert path("${params.publishDirReports}/counts/${readsSELane1.getSampleName()}.txt.summary").exists()
-            assert path("${params.publishDirReports}/counts/${readsPELane1.getSampleName()}.txt.summary").exists()
+            assert path("${params.publishDirReports}/.counts/${readsSELane1.getSampleName()}.txt.summary").exists()
+            assert path("${params.publishDirReports}/.counts/${readsPELane1.getSampleName()}.txt.summary").exists()
             // test merged counts files and feature metadata published to data dir
             assert path("${params.publishDirData}/counts/rnaseq_nf-test_counts.csv").exists()
             assert path("${params.publishDirData}/counts/rnaseq_nf-test_counts_feature_metadata.csv").exists()

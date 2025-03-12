@@ -75,6 +75,7 @@ workflow {
         ch_alignmentsIndividualSortedByCoord,
         ch_alignmentsMergedSortedByCoord,
         ch_annotations,
-        ch_quantify_log
+        ch_quantify_log,
+        "${params.projectTitle}"
     )
 }

@@ -19,7 +19,7 @@ process qualimap_rnaseq {
     label 'def_time'
 
     publishDir(
-        path:    "${params.publishDirReports}/rnaseq/qualimap",
+        path:    "${params.publishDirReports}/.rnaseq/qualimap",
         mode:    "${params.publishMode}",
         pattern: '*'
     )
