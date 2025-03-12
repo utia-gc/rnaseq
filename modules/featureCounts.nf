@@ -26,7 +26,7 @@ process featureCounts {
     )
     // publish summary file to reports dir
     publishDir(
-        path:    "${params.publishDirReports}/counts",
+        path:    "${params.publishDirReports}/.counts",
         mode:    "${params.publishMode}",
         pattern: '*.txt.summary'
     )

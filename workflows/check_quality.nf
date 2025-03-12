@@ -14,6 +14,7 @@ workflow CHECK_QUALITY {
         alignmentsMerged
         annotations
         quantify_log
+        projectTitle
 
     main:
         QC_Reads(
@@ -49,6 +50,6 @@ workflow CHECK_QUALITY {
         multiqc_full(
             ch_multiqc_full,
             file("${projectDir}/assets/multiqc_config.yaml"),
-            params.projectTitle
+            projectTitle
         )
 }
