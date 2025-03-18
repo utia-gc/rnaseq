@@ -170,7 +170,7 @@ flowchart LR
 
    - Run on Windows with [Windows Subsystem for Linux (WSL)](https://docs.microsoft.com/en-us/windows/wsl/). WSL2 highly recommended.
 
-2. [Nextflow](https://www.nextflow.io/) version >= 21.04
+2. [Nextflow](https://www.nextflow.io/) version >= 24.04
 
    - See [Nextflow Get started](https://www.nextflow.io/docs/latest/getstarted.html#) for prerequisites and instructions on installing and updating Nextflow.
 
@@ -200,7 +200,7 @@ flowchart LR
 
    ```bash
    nextflow run utia-gc/rnaseq \
-      -revision v0.3.2 \
+      -revision v0.6.0 \
       -profile nf_test
    ```
 
