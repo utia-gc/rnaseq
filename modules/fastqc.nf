@@ -29,10 +29,11 @@ process fastqc {
             """
             mv ${reads1} ${reads1NewName}
 
-            fastqc \
-                --quiet \
-                --threads ${task.cpus} \
-                ${args} \
+            fastqc \\
+                --quiet \\
+                --threads ${task.cpus} \\
+                --dir \${PWD} \\
+                ${args} \\
                 ${reads1NewName}
             """
         } else if(metadata.readType == 'paired') {
@@ -42,11 +43,12 @@ process fastqc {
             mv ${reads1} ${reads1NewName}
             mv ${reads2} ${reads2NewName}
 
-            fastqc \
-                --quiet \
-                --threads ${task.cpus} \
-                ${args} \
-                ${reads1NewName} \
+            fastqc \\
+                --quiet \\
+                --threads ${task.cpus} \\
+                --dir \${PWD} \\
+                ${args} \\
+                ${reads1NewName} \\
                 ${reads2NewName}
             """
         }

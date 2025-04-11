@@ -23,11 +23,12 @@ process gatk_MarkDuplicates {
         String args = new Args(argsDefault: task.ext.argsDefault, argsDynamic: task.ext.argsDynamic, argsUser: task.ext.argsUser).buildArgsString()
 
         """
-        gatk MarkDuplicates \
-            --INPUT ${bam} \
-            --METRICS_FILE ${metadata.sampleName}_MarkDuplicates-metrics.txt \
-            --OUTPUT ${metadata.sampleName}.bam \
-            --CREATE_INDEX \
+        gatk MarkDuplicates \\
+            --INPUT ${bam} \\
+            --METRICS_FILE ${metadata.sampleName}_MarkDuplicates-metrics.txt \\
+            --OUTPUT ${metadata.sampleName}.bam \\
+            --CREATE_INDEX \\
+            --TMP_DIR \${PWD} \\
             ${args}
 
         mv ${metadata.sampleName}.bai ${metadata.sampleName}.bam.bai
