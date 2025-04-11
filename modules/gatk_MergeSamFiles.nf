@@ -24,9 +24,10 @@ process gatk_MergeSamFiles {
         String args = new Args(argsDefault: task.ext.argsDefault, argsDynamic: task.ext.argsDynamic, argsUser: task.ext.argsUser).buildArgsString()
 
         """
-        gatk MergeSamFiles \
-            ${inputs} \
-            --OUTPUT ${metadata.sampleName}_merged.bam \
+        gatk MergeSamFiles \\
+            ${inputs} \\
+            --OUTPUT ${metadata.sampleName}_merged.bam \\
+            --TMP_DIR \${PWD} \\
             ${args}
         """
 }
