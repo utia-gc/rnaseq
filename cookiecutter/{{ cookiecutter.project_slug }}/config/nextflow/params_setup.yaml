@@ -1,2 +1,3 @@
 readsSources: 
   - "{{ cookiecutter.reads_source_dir }}/*_R{1,2}_001.fastq.gz"
+fastqCopyMode: 'hardlink'
