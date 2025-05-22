@@ -10,7 +10,8 @@ workflow {
     COPY_FASTQS(
         fastqPairs,
         file(params.readsDest),
-        params.overwrite
+        params.overwrite,
+        params.fastqCopyMode
     )
 
     WRITE_SAMPLESHEET(
@@ -27,6 +28,7 @@ workflow COPY_FASTQS {
         fastqPairs
         destinationDir
         overwrite
+        mode
 
     main:
         // make the destination directory
@@ -34,7 +36,7 @@ workflow COPY_FASTQS {
 
         // iterate through all fastq file pairs
         fastqPairs.map { fastqPrefix, fastqs ->
-            ArrayList fastqCopiedPaths = copyFastqs(fastqs, destinationDir, overwrite)
+            ArrayList fastqCopiedPaths = copyFastqs(fastqs, destinationDir, overwrite, mode)
             return [fastqPrefix, fastqCopiedPaths]
         }
         .tap { copiedFastqPairs }
@@ -88,10 +90,15 @@ String buildSamplesheetHeader() {
  * @param fastqs        Collection of fastq files to be copied.
  * @param desinationDir Path destination directory to copy fastq files into.
  * @param overwrite     Boolean for whether or not to replace the fastq files if they already exist in the destination directory.
+ * @param mode          String to control the copy mode. One of: 'copy', 'hardlink'
  *
  * @return ArrayList of fastq file paths in the destination directory. Even if files were not copied, e.g. because they already exist, the path to them in the desination directory is added to the list.
  */
-ArrayList copyFastqs(fastqs, destinationDir, overwrite) {
+ArrayList copyFastqs(fastqs, destinationDir, overwrite, mode) {
+    // check mode is an allowed value
+    def allowedModes = ['copy', 'hardlink',]
+    if (!(mode in allowedModes)) error "FASTQ copy mode '${mode}' is not a valid copy mode. `params.fastqCopyMode` must be one of: '${allowedModes}'"
+
     // keep track of the paths fastqs have been copied to
     ArrayList fastqCopiedPaths = []
 
@@ -104,11 +111,19 @@ ArrayList copyFastqs(fastqs, destinationDir, overwrite) {
             fastqCopiedPaths << destinationDir.resolve(fastq.name)
             return
         } else {
-            // Copy the fastq file
-            def fastqDestPath = fastq.copyTo(destinationDir)
-            log.info "Copied fastq file '${fastq}' --> '${fastqDestPath}'"
-            // add the copied fastq name to the list
-            fastqCopiedPaths << fastqDestPath
+            if (mode == 'copy') {
+                // Copy the fastq file
+                def fastqDestPath = fastq.copyTo(destinationDir)
+                log.info "Copied fastq file '${fastq}' --> '${fastqDestPath}'"
+                // add the copied fastq name to the list
+                fastqCopiedPaths << fastqDestPath
+            } else if (mode == 'hardlink') {
+                // Make hardlink to the fastq file
+                def fastqDestPath = fastq.mklink(destinationDir.resolve(fastq.name), hard: true, overwrite: overwrite)
+                log.info "Hard linked fastq file '${fastq}' --> '${fastqDestPath}'"
+                // add the copied fastq name to the list
+                fastqCopiedPaths << fastqDestPath
+            }
         }
     }
 
