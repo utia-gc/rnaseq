@@ -36,7 +36,7 @@ nextflow -log .cache/nf_logs/setup.log \
     run \
         -main-script setup.nf \
         -revision "${revision}" \
-        -profile condo_trowan1 \
+        -profile setup,condo_trowan1 \
         -config config/nextflow/setup.config \
         -params-file config/nextflow/params_setup.yaml \
     utia-gc/ngs
