@@ -1,5 +1,3 @@
-params.writeR2ToSamplesheet = true
-
 workflow {
     LinkedHashMap decodeMap = buildSampleNameDecodeMap(file(params.decode))
 
