@@ -98,7 +98,7 @@ markdown_extensions:
 extra:
   pipeline:
     name: utia-gc/rnaseq
-    revision: v0.7.0
+    revision: main
   version:
     provider: mike
     alias: true
