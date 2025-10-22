@@ -28,3 +28,7 @@ git tag -a "${revision}" -m "tag: ${revision}"
 sed -i -E "s/(-revision )$revision/\1main/" README.md 
 sed -i -E "s/(revision: )$revision/\1main/" mkdocs.yml
 sed -i -E "s/(version[[:space:]]+= )'$revision'/\1'main'/" nextflow.config
+
+# make git commit for reversion back to main
+git add README.md mkdocs.yml nextflow.config
+git commit -m "chore(release): back to main"
