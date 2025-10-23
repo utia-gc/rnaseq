@@ -1,0 +1,280 @@
+---
+params:
+  # all paths must be relative to the base of the project directory, i.e. where .Rproj file is
+  # path to SummarizedExperiment object to use for the analysis
+  se_path: "data/expression-analysis/summarized-experiment-filter_samples_genes.rds"
+  # directory for caching intermediate results. This is used Hmisc::runifChanged to speed up analysis
+  cache_dir: ".cache/rnaseq-expression-analysis"
+  # numbers of genes to randomly sample from the SummarizedExperiment to speed up variance partitioning analysis
+  # don't sample if set to null
+  vp_genes_sample_size: 1000
+  # number top variable genes for PCA
+  pca_ntop: 500
+  # parallelization params for variancePartition
+  bpparam: !expr BiocParallel::SnowParam(4, "SOCK")
+---
+
+# Descriptive statistics {.unnumbered}
+
+```{r}
+#| label: attach-packages-modules
+#| code-summary: "Attach packages and modules"
+
+# start w/ a clean session
+if (!is.null(names(sessionInfo()$otherPkgs))) {
+  invisible(lapply(paste0('package:', names(sessionInfo()$otherPkgs)), detach, character.only = TRUE, unload = TRUE))
+}
+box::purge_cache()
+
+# attach packages
+use(
+  "davizr",
+  c("get_formula", "get_modeling_all_variables", "perform_pca", "perform_variance_partition_analysis", "plot_canonical_correlation", "plot_cor_heatmap", "plot_dist_heatmap", "plot_library_sizes", "plot_modeling_variables_pairs", "plot_scores", "plot_scree", "run_if_changed", "tbl_interest_variables_freq", "tbl_sample_data")
+)
+use("GGally", c("ggduo"))
+use("ggplot2", c("theme_bw", "theme_set"))
+use("here", c("here"))
+use("Hmisc", c("runifChanged"))
+use("qreport", c("maketabs"))
+use("SummarizedExperiment", c("assay", "assay<-", "assays", "colData"))
+use("variancePartition", c("plotVarPart"))
+
+# set ggplot2 theme
+theme_set(theme_bw())
+
+# attach local modules
+options(box.path = here("src", "R"))
+box::use()
+```
+
+
+## Read data
+
+```{r}
+#| label: read-summarized-experiment
+#| code-summary: "Read SummarizedExperiment"
+
+# construct SummarizedExperiment
+se <- readRDS(here(params$se_path))
+```
+
+
+## Sample data
+
+```{r}
+#| label: tbl-sample-data
+#| tbl-cap: "Sample data"
+
+tbl_sample_data(se)
+```
+
+
+### Group counts
+
+```{r}
+#| label: tbl-counts-variable-group
+#| tbl-cap: Counts each variable group
+
+tbl_interest_variables_freq(se)
+```
+
+
+### Variable interrelationships
+
+```{r}
+#| label: fig-variable-interrelationships
+#| code-summary: "Variable pairs plot"
+#| output: asis
+
+try({
+  # plot generic scatterplot matrix of all modeling variables
+  modeling_variables_pairs_plot <- plot_modeling_variables_pairs(se)
+  if (interactive()) modeling_variables_pairs_plot
+  
+  if (!interactive()) {
+    maketabs(
+      `All pairs plot` ~ modeling_variables_pairs_plot + caption("Scatter plot matrix of sample data variables.")
+    )
+  }
+})
+```
+
+
+```{r}
+#| label: fig-can-cor
+#| code-summary: "Canonical correlation analysis"
+#| output: asis
+
+all_cc_plot <- plot_canonical_correlation(se, "all")
+if (interactive()) all_cc_plot
+
+explanatory_cc_plot <- plot_canonical_correlation(se, "explanatory")
+if (interactive()) explanatory_cc_plot
+
+if (!interactive()) {
+  maketabs(
+    `All variables` ~ all_cc_plot + caption(paste("Canonical correlation of all modeling sample data variables.")),
+    `Explanatory variables` ~ explanatory_cc_plot + caption(paste("Canonical correlation of sample data variables."))
+  )
+}
+```
+
+
+## Counts
+
+### Library size
+
+```{r}
+#| label: fig-library-size
+#| code-summary: "Plot library size"
+#| output: asis
+
+lib_size_all_genes_plot <- plot_library_sizes(se, library_size_var = "library_size_all_genes")
+if (interactive()) lib_size_all_genes_plot
+
+lib_size_expressed_genes_plot <- plot_library_sizes(se, library_size_var = "library_size_expressed_genes")
+if (interactive()) lib_size_expressed_genes_plot
+
+if (!interactive()) {
+  maketabs(
+    `Library size -- All genes` ~ lib_size_all_genes_plot + caption("Size of each library prior to filtering. This is the total number of reads within all genes."),
+    `Library size -- Expressed genes` ~ lib_size_expressed_genes_plot + caption("Size of each library after filtering. This is the total number of reads within genes that passed expression filtering.")
+  )
+}
+```
+
+
+### PCA
+
+Principal component analysis (PCA) was performed for the `r params$pca_ntop` genes with highest variance.
+
+```{r}
+#| label: fig-pca
+#| code-summary: "Perform PCA"
+#| output: asis
+
+pca <- perform_pca(se, assay = "vsd", ntop = params$pca_ntop)
+
+scree_plot <- plot_scree(pca)
+if (interactive()) scree_plot
+
+scores_plot <- plot_scores(pca, x = "PC1", y = "PC2", color = "group", shape = "group")
+if (interactive()) scores_plot
+
+pca_duo_plot <- ggduo(
+  pca[["scores"]],
+  columnsX = get_modeling_all_variables(se),
+  columnsY = c("PC1", "PC2", "PC3", "PC4", "PC5")
+)
+if (interactive()) pca_duo_plot
+
+if (!interactive()) {
+  maketabs(
+    `Score plot` ~ scores_plot + caption("PCA scores plot -- PC1 and PC2."),
+    `PC scores by variables` ~ pca_duo_plot + caption("Relate top PCs with sample data variables."),
+    `Scree plot` ~ scree_plot + caption("Proportion variance explained and cumulative variance explained by each PC.")
+  )
+}
+```
+
+
+### Sample--sample correlations and distances
+
+```{r}
+#| label: fig-correlation-distance-analysis
+#| code-summary: "Sample--sample correlation and distance analysis"
+#| output: asis
+
+spearman_heatmap <- plot_cor_heatmap(
+  se,
+  assay = "counts",
+  method = "spearman",
+  show_row_names = FALSE,
+  show_column_names = FALSE
+)
+if (interactive()) spearman_heatmap
+
+pearson_heatmap <- plot_cor_heatmap(
+  se,
+  assay = "vsd",
+  method = "pearson",
+  show_row_names = FALSE,
+  show_column_names = FALSE
+)
+if (interactive()) pearson_heatmap
+
+manhattan_heatmap <- plot_dist_heatmap(
+  se,
+  assay = "vsd",
+  method = "manhattan",
+  show_row_names = FALSE,
+  show_column_names = FALSE
+)
+if (interactive()) manhattan_heatmap
+
+if (!interactive()) {
+  maketabs(
+    `Spearman's correlations` ~ spearman_heatmap + caption("Sample--sample correlation heatmap -- Spearman's correlations of raw counts."),
+    `Pearson's correlations` ~ pearson_heatmap + caption("Sample--sample correlation heatmap -- Pearson's correlations of variance-stabilizing transformed, normalized counts."),
+    `Manhattan distance` ~ manhattan_heatmap + caption("Sample--sample distance heatmap -- Manhattan distance of variance-stabilizing transformed, normalized counts.")
+  )
+}
+```
+
+
+### Variance partitioning
+
+```{r}
+#| label: fig-variance-partitioning
+#| code-summary: "Perform variance partitioning analysis"
+#| output: asis
+
+# sample genes if specified in params
+if (is.null(params$vp_genes_sample_size)) {
+  se_vp <- se
+} else {
+  set.seed(2025)
+  keep_gene_indexes <- sort(sample(nrow(se), size = params$vp_genes_sample_size, replace = FALSE))
+  se_vp <- se[keep_gene_indexes, , drop = FALSE]
+}
+
+perform_all_vp_analysis <- function() {
+  perform_variance_partition_analysis(
+    se_vp,
+    "vsd", 
+    "vp_all",
+    BPPARAM = params$bpparam
+  )
+}
+vp_all <- run_if_changed(
+  file = here(params$cache_dir, "varPartResults_all.rds"),
+  fun = perform_all_vp_analysis,
+  perform_variance_partition_analysis, assays(se_vp), colData(se_vp), get_formula(se_vp, "vp_all")
+)
+vp_plot_all <- plotVarPart(vp_all)
+if (interactive()) vp_plot_all
+
+perform_explanatory_vp_analysis <- function() {
+  perform_variance_partition_analysis(
+    se_vp,
+    "vsd", 
+    "vp_explanatory",
+    BPPARAM = params$bpparam
+  )
+}
+vp_explanatory <- run_if_changed(
+  file = here(params$cache_dir, "varPartResults_explanatory.rds"),
+  fun = perform_explanatory_vp_analysis,
+  perform_variance_partition_analysis, assays(se_vp), colData(se_vp), get_formula(se_vp, "vp_explanatory")
+)
+vp_plot_explanatory <- plotVarPart(vp_explanatory)
+if (interactive()) vp_plot_explanatory
+
+if (!interactive()) {
+  maketabs(
+    `All formula` ~ vp_plot_all + caption(paste(as.character(get_formula(se, "vp_all")), collapse = " ")),
+    `Explanatory formula` ~ vp_plot_explanatory + caption(paste(as.character(get_formula(se, "vp_explanatory")), collapse = " "))
+  )
+}
+```
+

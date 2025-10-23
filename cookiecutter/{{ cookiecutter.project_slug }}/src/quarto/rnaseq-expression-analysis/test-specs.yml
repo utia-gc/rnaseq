@@ -1,0 +1,11 @@
+---
+contrasts:
+  Treat_vs_Control:
+    control: "groupTreat - groupControl"
+    description: "Group specific differences in Treated relative to Control."
+tests:
+  Treated vs Control:
+    contrasts:
+      - "Treat_vs_Control"
+    description: "Differences associated with Treatment relative to Control"
+

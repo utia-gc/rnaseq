@@ -1,0 +1,37 @@
+---
+project:
+  type: book
+book:
+  author: "{{ cookiecutter.author }}"
+  date: ""
+  chapters:
+    - index.qmd
+    - part: All samples
+      chapters:
+        - 01-wrangle-data.qmd
+        - 02-descriptive-stats.qmd
+        - 03-differential-expression.qmd
+    - references/references.qmd
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    toc-expand: 2
+    toc-location: left
+    code-fold: true
+    code-summary: Show code
+    theme: cosmo
+    fig-cap-location: bottom
+    fig-dpi: 600
+    df-print: paged
+    page-layout: full
+profile:
+  group:
+    - - exploratory
+      - production
+  default: exploratory
+date-modified: now
+date-format: long
+callout-appearance: simple
+bibliography: references/references.bib
+

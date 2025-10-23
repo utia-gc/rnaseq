@@ -1,0 +1,10 @@
+---
+project:
+  output-dir: ../../../exploratory/rnaseq-expression-analysis
+execute:
+  message: true
+  warning: true
+format:
+  html:
+    embed-resources: true
+

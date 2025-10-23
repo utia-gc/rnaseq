@@ -1,0 +1,56 @@
+# Preface {.unnumbered}
+
+## Usage
+
+### Navigating the report
+
+#### Report structure
+
+This report is setup as a book rendered in the browser as a web page.
+Major sections of the report are separated into different chapters which can be accessed on the left hand side of the page. 
+Sections and subsections within chapters can be conveniently navigated to in the table of contents also available in the panel on the left side of the page.
+
+#### Data visualizations
+
+One of the main features of these HTML reports is that they are interactive, and we try to use this where it is beneficial.
+To keep from overwhelming users with information, many of the tables and figures are hidden within panels of tabsets that can be clicked through to view additional information.
+Source code for analyses and visualizations are hidden in collapsed code boxes that can be expanded by clicking on the arrow to the left of the code summary.
+Additionally, many of the plots and tables throughout this report are interactive -- additional information about points can often be seen by mousing over those points, and zooming and panning are available to see features of the graph in more detail.
+Static plots can also be enlarged by simply right clicking on them and selecting the "Open in a new tab" option.
+Find examples of these below.
+
+```{r}
+#| label: example-tabset
+#| code-summary: "Example tabset"
+#| output: asis
+
+tabs <- list(
+  `Interactive table` = DT::datatable(head(ggplot2::midwest, 50), options = list(scrollX = TRUE)),
+  `Interactive plot` = plotly::plot_ly(ggplot2::midwest, x = ~percollege, color = ~state, type = "box"),
+  `Static plot` = ggplot2::ggplot(ggplot2::midwest, ggplot2::aes(x = percbelowpoverty, y = percollege, color = inmetro)) +
+    ggplot2::geom_point() +
+    ggplot2::theme_bw()
+)
+if (interactive()) tabs
+
+if (!interactive()) {
+  qreport::maketabs(tabs)
+}
+```
+
+#### Methodological details
+
+Methodological details are provided as collapsed callouts that can be expanded by clicking on them.
+Like using tabsets for data visualizations, these collpased callouts allow us to provide the necessary details without forcing the users to constantly scan past huge blocks of text.
+An example of a methodological callout is shown below.
+
+::: {.callout-note title="Methodological details" collapse=true}
+This is an example of a callout explaining methodological details.
+
+Oftentimes these are long and detailed chunks of text, so it can be nice to hide them.
+:::
+
+### Finding information
+
+A search bar is available in the top left of each page for conveniently finding information.
+

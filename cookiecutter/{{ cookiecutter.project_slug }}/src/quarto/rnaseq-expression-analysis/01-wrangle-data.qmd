@@ -1,0 +1,280 @@
+---
+params:
+  # all paths must be relative to the base of the project directory, i.e. where .Rproj file is
+  # path to stored counts data file
+  counts_path: "data/counts/{{ cookicutter.project_slug }}_counts.csv"
+  # path to sample (meta)data
+  samples_path: ""
+  # variables to set in SummarizedExperiment, character vectors delimited by ";"
+  interest_vars: "group"
+  nuisance_vars: ""
+  screening_vars: ""
+  # formula for statistical design
+  design_formula: "~ 0 + group"
+  # formulas for variance partitioning analysis, character vectors structure as  lmer style formula
+  vp_formula_explanatory: "~ (1 | group)"
+  vp_formula_all: "~ (1 | group)"
+  # minimum count required for for low expression filtering. supplied to edgeR::filterByExpr
+  min_count: 10
+  # whether or not to overwrite to SummarizedExperiment files
+  overwrite_se: true
+  # path to unfiltered SummarizedExperiment, before any sample or gene-level filtering
+  se_unfilter_path: "data/expression-analysis/summarized-experiment-unfilter.rds"
+  # path to filtered samples SummarizedExperiment object
+  se_filter_samples_path: "data/expression-analysis/summarized-experiment-filter_samples.rds"
+  # path to filtered samples and genes SummarizedExperiment object
+  se_filter_samples_genes_path: "data/expression-analysis/summarized-experiment-filter_samples_genes.rds"
+---
+
+# Wrangle data, fit model, and extract results {.unnumbered}
+
+```{r}
+#| label: attach-packages-modules
+#| code-summary: "Attach packages and modules"
+
+# start w/ a clean session
+if (!is.null(names(sessionInfo()$otherPkgs))) {
+  invisible(lapply(paste0("package:", names(sessionInfo()$otherPkgs)), detach, character.only = TRUE, unload = TRUE))
+}
+box::purge_cache()
+
+# attach packages
+use(
+  "davizr",
+  c("add_library_size", "construct_se", "drop_excluded_samples", "get_modeling_all_variables", "plot_logcpm_density", "plot_sample_exclusions_heatmap", "read_counts_file", "set_aesthetics", "set_formula", "write_se")
+)
+use("DESeq2", c("rlogTransformation", "varianceStabilizingTransformation"))
+use("DT", c("datatable"))
+use("edgeR", c("filterByExpr"))
+use("ggplot2", c("theme_bw", "theme_set"))
+use("here", c("here"))
+use("qreport", c("maketabs"))
+use("RColorBrewer", c("brewer.pal"))
+use("stringr", c("str_glue"))
+use("SummarizedExperiment", c("assay", "assay<-", "colData"))
+
+# set ggplot2 theme
+theme_set(theme_bw())
+
+# attach local modules
+options(box.path = here("src", "R"))
+box::use()
+```
+
+
+## Read data
+
+### Counts
+
+Read counts data from file.
+
+```{r}
+#| label: read-counts
+#| code-summary: "Read counts"
+
+# if counts file produced by utia-gc/rnaseq pipeline, read with davizr::read_counts_file()
+counts <- read_counts_file(here(params$counts_path))
+```
+
+
+### Samples
+
+Read and tidy samples data from file and any other sources.
+
+```{r}
+#| label: read-tidy-samples
+#| code-summary: "Read and tidy samples data"
+
+# simplest case is samples data is stored in CSV with no tidying needed
+samples <- read.csv(here(params$samples_path))
+```
+
+
+## Construct `SummarizedExperiment`
+
+The `SummarizedExperiment` class is the class of choice for bulk RNA-seq analysis.
+Essentially every major RNA-seq analysis workflow in R can work directly with objects of type `SummarizedExperiment`.
+
+In this analysis, we use the `SummarizedExperiment` class as our singular, ground truth data object.
+
+```{r}
+#| label: construct-summarized-experiment
+#| code-summary: "Construct `SummarizedExperiment`"
+
+# construct SummarizedExperiment
+se <- construct_se(
+  counts = counts,
+  samples = samples,
+  library_size_var = "library_size_all_genes",
+  interest_variables = strsplit(params$interest_vars, split = ";")[[1]],
+  nuisance_variables = strsplit(params$nuisance_vars, split = ";")[[1]],
+  screening_variables = strsplit(params$screening_vars, split = ";")[[1]]
+) |> 
+  # add formulas for modeling
+  set_formula(name = "design", as.formula(params$design_formula)) |> 
+  set_formula(name = "vp_explanatory", as.formula(params$vp_formula_explanatory)) |> 
+  set_formula(name = "vp_all", as.formula(params$vp_formula_all))
+
+# set aesthetics
+se <- se |> 
+  # set color aesthetics for explanatory variables
+  set_aesthetics(
+    variable = "group",
+    values = setNames(
+      brewer.pal(n = length(levels(se[["group")), name = "Accent"),
+      levels(se[["group"]])
+    ),
+    aesthetic = "color"
+  ) |> 
+  # set shape aesthetics for explanatory variables
+  set_aesthetics(
+    variable = "group",
+    values = setNames(
+      c(),
+      levels(se[["group"]])
+    ),
+    aesthetic = "shape"
+  )
+```
+
+
+### Write unfiltered `SummarizedExperiment`
+
+The "Unfiltered" `SummarizedExperiment` is the `SummarizedExperiment` object for all samples and all genes before any samples or genes are dropped from the analysis.
+This essentially serves as the starting point or ground truth for all downstream analyses.
+
+```{r}
+#| label: write-summarized-experiment
+#| code-summary: "Write `SummarizedExperiment`"
+
+write_se(se, here(params$se_unfilter_path), overwrite = params$overwrite_se)
+```
+
+
+## Curate data
+
+Curate the gene expression data to include only high quality samples for downstream analysis and expressed genes.
+In other words, filter out low quality or unnecessary samples and low expressed genes.
+
+### Exclude samples
+
+There are myriad reasons why certain samples may be dropped from an RNA-seq expression analysis.
+Some of these are technical, such as known technical failures during library prep or low sequencing depth.
+Other reasons may not have a clear cause, but QC checks may uncover problematic samples that should be dropped to protect the integrity of the analysis.
+
+This section drops user-defined samples from the analysis and generates visualizations to document which samples were excluded and the reason(s) for exclusion.
+
+```{r}
+#| label: fig-excluded-samples
+#| code-summary: "Exclude samples from the analysis"
+#| output: asis
+
+minimum_library_size <- 10e6
+# build key:value pairs of reason for exclusion:names of samples to be excluded
+sample_exclusions <- list(
+  "Low depth" = colnames(se)[se[["library_size_all_genes"]] < minimum_library_size]
+)
+
+# plot sample exclusions with reasons
+sample_exclusions_heatmap_plot <- plot_sample_exclusions_heatmap(se, sample_exclusions)
+if (interactive()) sample_exclusions_heatmap_plot
+
+# make table describing exclusion reasons
+sample_exclusions_descriptions_tbl <- data.frame(
+  "Reason" = c(
+    "Low depth"
+  ),
+  "Description" = c(
+    str_glue("Library size < minimum library size ({minimum_library_size})")
+  )
+) |> 
+  datatable()
+if (interactive()) sample_exclusions_descriptions_tbl
+
+# drop excluded samples from SummarizedExperiment
+se_filter_samples <- drop_excluded_samples(se, sample_exclusions)
+
+if (!interactive()) {
+  maketabs(
+    `Sample exclusions heatmap` ~ sample_exclusions_heatmap_plot + caption("Binary heatmap of sample exclusions for all reasons."),
+    `Sample exclusions descriptions` ~ sample_exclusions_descriptions_tbl + caption("Descriptions of reasons for sample exclusions.")
+  )
+}
+```
+
+
+#### Write filtered samples `SummarizedExperiment`
+
+```{r}
+#| label: write-summarized-experiment-filter_samples
+#| code-summary: "Write filter samples `SummarizedExperiment`"
+
+write_se(se_filter_samples, here(params$se_filter_samples_path), overwrite = params$overwrite_se)
+```
+
+
+### Exclude genes
+
+Exclude genes with low expression.
+
+```{r}
+#| label: filter-low-expression-genes
+#| code-summary: "Filter low expression genes"
+
+keep_exprs <- filterByExpr(se_filter_samples, group = se_filter_samples[["group"]], min.count = params$min_count)
+se_filter_samples_genes <- se_filter_samples[keep_exprs, ]
+
+# compute library size for filtered SummarizedExperiment
+se_filter_samples_genes <- add_library_size(se_filter_samples_genes, library_size_var = "library_size_expressed_genes")
+
+# make breakdown of filtering by gene expression
+tribble(
+  ~`Dataset`, ~`Number genes`,
+  "Prefiltered", as.character(nrow(se_filter_samples)),
+  "Postfiltered", as.character(nrow(se_filter_samples_genes))
+) |> 
+  datatable()
+```
+
+
+### Transform counts
+
+Transform filtered samples and genes counts.
+
+```{r}
+#| label: transform-filtered_samples_genes-counts
+#| code-summary: "Transform filtered counts"
+
+assay(se_filter_samples_genes, "rld") <- rlogTransformation(assay(se_filter_samples_genes, "counts"))
+assay(se_filter_samples_genes, "vsd") <- varianceStabilizingTransformation(assay(se_filter_samples_genes, "counts"))
+```
+
+
+```{r}
+#| label: fig-logcpm-density
+#| code-summary: "log(CPM) densities"
+#| output: asis
+
+logcpm_density_all_genes_plot <- plot_logcpm_density(se_filter_samples)
+if (interactive()) logcpm_density_all_genes_plot
+
+logcpm_density_expressed_genes_plot <- plot_logcpm_density(se_filter_samples_genes)
+if (interactive()) logcpm_density_expressed_genes_plot
+
+if (!interactive()) {
+  maketabs(
+    `All genes` ~ logcpm_density_all_genes_plot + caption("Distributions of log(CPM) transformed counts of reads within all genes."),
+    `Expressed genes` ~ logcpm_density_expressed_genes_plot + caption("Distributions of log(CPM) transformed counts of reads within expressed genes (low expressed genes dropped).")
+  )
+}
+```
+
+
+### Write filter samples and genes `SummarizedExperiment`
+
+```{r}
+#| label: write-summarized-experiment-filter_samples_genes
+#| code-summary: "Write filter samples and genes `SummarizedExperiment`"
+
+write_se(se_filter_samples_genes, here(params$se_filter_samples_genes_path), overwrite = params$overwrite_se)
+```

@@ -1,0 +1,217 @@
+---
+params:
+  # all paths must be relative to the base of the project directory, i.e. where .Rproj file is
+  # path to SummarizedExperiment object to use for the analysis
+  se_path: "data/expression-analysis/summarized-experiment-filter_samples_genes.rds"
+  # directory for caching intermediate results. This is used Hmisc::runifChanged to speed up analysis
+  cache_dir: ".cache/rnaseq-expression-analysis"
+  # significance threshold for DEGs, i.e. results table adjusted p-values
+  alpha: 0.05
+  # formula for statistical design
+  # keep current design formula if set to null
+  design_formula: null
+  # numbers of genes to randomly sample from the SummarizedExperiment to speed up analysis
+  # don't sample if set to null
+  genes_sample_size: null
+  # path to YAML file with test specs data
+  test_specs_path: "src/quarto/rnaseq-expression-analysis/test-specs.yml"
+  # BiocParallel params for parallelization
+  bpparam: !expr BiocParallel::SnowParam(4, "SOCK")
+---
+
+# Differential expression analysis {.unnumbered}
+
+```{r}
+#| label: attach-packages-modules
+#| code-summary: "Attach packages and modules"
+
+# start w/ a clean session
+if (!is.null(names(sessionInfo()$otherPkgs))) {
+  invisible(lapply(paste0('package:', names(sessionInfo()$otherPkgs)), detach, character.only = TRUE, unload = TRUE))
+}
+box::purge_cache()
+
+# attach packages
+use("davizr",
+  c(
+    "get_formula", "mkdir_p", "run_if_changed", "set_formula",
+    # attach test specifications methods
+    "TestSpecs", "get_contrasts", "get_contrasts_table", "get_tests_table"
+  )
+)
+use("DT", c("datatable"))
+use("ggplot2", c("theme_bw", "theme_set"))
+use("here", c("here"))
+use("latex2exp", c("TeX"))
+use("openxlsx2", c("wb_workbook"))
+use("qreport", c("maketabs"))
+use("stringr", c("str_glue", "str_replace_all"))
+use("SummarizedExperiment", c("assay", "assay<-", "colData", "rowData"))
+
+# set ggplot2 theme
+theme_set(theme_bw())
+
+# attach local modules
+options(box.path = here("src", "R"))
+box::use()
+```
+
+
+## Prepare data
+
+### Read expression and sample data
+
+```{r}
+#| label: read-summarized-experiment
+#| code-summary: "Read SummarizedExperiment"
+
+# read SummarizedExperiment
+se <- readRDS(here(params$se_path))
+
+# sample genes if specified in params
+if (!is.null(params$genes_sample_size)) {
+  set.seed(2025)
+  keep_gene_indexes <- sort(sample(nrow(se), size = params$genes_sample_size, replace = FALSE))
+  se <- se[keep_gene_indexes, , drop = FALSE]
+}
+
+# set design formula if specified in params
+if (!is.null(params$design_formula)) {
+  se <- set_formula(
+    se,
+    "design",
+    as.formula(params$design_formula)
+  )
+}
+```
+
+
+### Setup output
+
+```{r}
+#| label: write-readme
+#| code-summary: "Write README to workbook"
+
+# create workbook
+wb <- wb_workbook()
+
+# add README sheet
+wb$add_worksheet("README")
+readme_text <- c(
+  "WORKBOOK DOCUMENTATION",
+  "",
+  "Purpose: Differential expression analysis results for '{{ cookiecutter.project_slug }}'.",
+  "",
+  "Sheet Descriptions:",
+  "- README: Workbook description",
+  "- Tests: Names, contrast names, and descriptions of specific analyses performed",
+  "- Contrasts: Names, expressions, and descriptions of linear contrasts used to generate results",
+  "- *All remaining sheets*: Differential expression analysis results for all tests. Sheet names will correspond to test names listed in 'Tests' sheet but may be truncated.",
+  "",
+  "Notes:",
+  "- Differential expression analysis method: ",
+  str_glue("- Model formula for differential expression analysis: `{get_formula(se, 'design') |> as.character() |> paste(sep = ' ', collapse = ' ')}`"),
+  str_glue("- Adjusted P-value significance threshold (alpha value): {params$alpha}"),
+  str_glue("- log2 fold change threshold for DEGs: {params$lfc_threshold}")
+)
+wb$add_data("README", readme_text, start_col = 1, start_row = 1)
+```
+
+
+### Construct differential expression analysis inputs
+
+```{r}
+#| label: design-formula-latex
+#| echo: false
+
+design_formula_tex <- get_formula(se, "design") |> 
+  as.character() |> 
+  paste(collapse = " ") |> 
+  str_replace_all("_", " ") |> 
+  TeX()
+```
+
+
+Expression data is modeled for differential expression analysis according to the following formula:
+
+$$ `{r} design_formula_tex` $$
+
+
+
+Construct data structures that are used as input to differential expression analysis.
+This includes constructing the design and contrasts matrices for statistical modeling.
+This facilitates extracting the linear model results of interest.
+
+```{r}
+#| label: construct-de-input-data-structures
+#| code-summary: "Construct data structures for differential expression analysis input"
+
+# build test specifications object with tests and contrasts info
+test_specs <- TestSpecs(
+  here(params$test_specs_path),
+  alpha = params$alpha,
+  lfc_threshold = params$lfc_threshold
+)
+
+# make contrasts matrix
+contrasts_matrix <- makeContrastsDream(
+  formula = get_formula(se, "design"),
+  data = colData(se),
+  contrasts = get_contrasts(test_specs)
+)
+
+# write tests and contrasts data to Excel workbook
+wb$add_worksheet("Tests")
+wb$add_data("Tests", get_tests_table(test_specs))
+wb$add_worksheet("Contrasts")
+wb$add_data("Contrasts", get_contrasts_table(test_specs))
+```
+
+
+::: {.panel-tabset}
+
+#### Table of tests data
+
+```{r}
+#| label: tbl-tests-data
+#| code-summary: "Table of tests data"
+#| tbl-cap: "Table of tests for each test analyzed. If a test has multiple contrast names, the names are separated by a pipe ('|')."
+#| echo: false
+
+datatable(
+  get_tests_table(test_specs),
+  options = list(pageLength = min(nrow(get_tests_table(test_specs)), 20))
+)
+```
+
+
+#### Graphical representation of linear contrasts
+
+```{r}
+#| label: fig-contrasts-matrix
+#| code-summary: "Plot contrasts matrix"
+#| fig-cap: "Graphical representation of coefficients for each named linear contrast."
+#| echo: false
+
+# visualize contrasts matrix
+plotContrasts(contrasts_matrix)
+```
+
+
+#### Table of contrasts data
+
+```{r}
+#| label: tbl-contrasts-data
+#| code-summary: "Table of contrasts data"
+#| tbl-cap: "Table of data for each named linear contrast."
+#| echo: false
+
+datatable(
+  get_contrasts_table(test_specs),
+  options = list(pageLength = min(nrow(get_contrasts_table(test_specs)), 20))
+)
+```
+
+
+:::
+
