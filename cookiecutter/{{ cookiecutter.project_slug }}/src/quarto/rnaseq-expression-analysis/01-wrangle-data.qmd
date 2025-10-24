@@ -2,7 +2,7 @@
 params:
   # all paths must be relative to the base of the project directory, i.e. where .Rproj file is
   # path to stored counts data file
-  counts_path: "data/counts/{{ cookicutter.project_slug }}_counts.csv"
+  counts_path: "data/counts/{{ cookiecutter.project_slug }}_counts.csv"
   # path to sample (meta)data
   samples_path: ""
   # variables to set in SummarizedExperiment, character vectors delimited by ";"
