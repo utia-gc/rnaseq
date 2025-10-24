@@ -1,5 +1,7 @@
 # References {.unnumbered}
 
+{% raw %}
 ::: {#refs}
 :::
+{% endraw %}
 
