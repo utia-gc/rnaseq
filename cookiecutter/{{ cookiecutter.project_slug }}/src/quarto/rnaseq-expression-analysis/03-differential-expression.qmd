@@ -47,6 +47,7 @@ use("openxlsx2", c("wb_workbook"))
 use("qreport", c("maketabs"))
 use("stringr", c("str_glue", "str_replace_all"))
 use("SummarizedExperiment", c("assay", "assay<-", "colData", "rowData"))
+use("variancePartition", c("makeContrastsDream", "plotContrasts"))
 
 # set ggplot2 theme
 theme_set(theme_bw())
@@ -135,7 +136,6 @@ design_formula_tex <- get_formula(se, "design") |>
 Expression data is modeled for differential expression analysis according to the following formula:
 
 $$ `{r} design_formula_tex` $$
-
 
 
 Construct data structures that are used as input to differential expression analysis.

@@ -1,7 +1,7 @@
 ---
 contrasts:
   Treat_vs_Control:
-    control: "groupTreat - groupControl"
+    contrast: "groupTreat - groupControl"
     description: "Group specific differences in Treated relative to Control."
 tests:
   Treated vs Control:
